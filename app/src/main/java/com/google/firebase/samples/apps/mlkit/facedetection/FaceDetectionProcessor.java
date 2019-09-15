@@ -129,11 +129,11 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         imageView.setPadding(2, 2, 2, 2);
 
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView.setMaxHeight(200);
-        imageView.setMaxWidth(200);
+        imageView.setMaxHeight(350);
+        imageView.setMaxWidth(350);
 
-        imageView.setMinimumHeight(200);
-        imageView.setMinimumWidth(200);
+        imageView.setMinimumHeight(350);
+        imageView.setMinimumWidth(350);
         layout.addView(imageView);
 
         int x = firebaseVisionFace.getBoundingBox().left;
@@ -143,18 +143,16 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         Log.d(TAG, "onSuccess: x=" + x + " y=" + y + " w=" + w + " h=" + h);
         if( x < 0 )
           x = 0;
-        else if( y < 0 )
+        if( y < 0 )
           y = 0;
-        else
-        {
-            w = (bitmap.getWidth() - x);
-            h = (bitmap.getHeight() - y);
-        }
+
+        w=350;
+        h=350;
 //        if (x + w >= bitmap.getWidth())
 //          w = (bitmap.getWidth() - x);
 //        if( y + h >= bitmap.getHeight())
 //          h = (bitmap.getHeight() - y);
-
+//
         Log.d(TAG, "onSuccess: x=" + x + " y=" + y + " w=" + w + " h=" + h);
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap,x,y,w,h);
         // resizedBitmap.setWidth(x+w);
