@@ -13,10 +13,16 @@
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.facedetection;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -26,9 +32,12 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 import com.google.firebase.samples.apps.mlkit.FrameMetadata;
 import com.google.firebase.samples.apps.mlkit.GraphicOverlay;
+import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
+import com.google.firebase.samples.apps.mlkit.R;
 import com.google.firebase.samples.apps.mlkit.VisionProcessorBase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Face Detector Demo. */
@@ -38,8 +47,19 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
   private ImageView imageView;
   private Bitmap bitmap;
   private final FirebaseVisionFaceDetector detector;
+  private LinearLayout layout;
+  View v;
+  Context c;
+  Resources res;
+  public Activity activity;
+  String packageName;
+  ArrayList<Integer> idlist;
 
-  public FaceDetectionProcessor() {
+  public FaceDetectionProcessor(Activity _activity) {
+    activity=_activity;
+    //res=context.getResources();
+    //c=context;
+    //packageName=context.getPackageName();
     FirebaseVisionFaceDetectorOptions options =
         new FirebaseVisionFaceDetectorOptions.Builder()
             .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
@@ -50,14 +70,16 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     detector = FirebaseVision.getInstance().getVisionFaceDetector(options);
   }
 
-  public FaceDetectionProcessor(ImageView imageView) {
+  public FaceDetectionProcessor(LinearLayout layout, LivePreviewActivity livePreviewActivity) {
     FirebaseVisionFaceDetectorOptions options =
             new FirebaseVisionFaceDetectorOptions.Builder()
                     .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                     .setTrackingEnabled(true)
                     .build();
-    this.imageView = imageView;
+    this.layout = layout;
+    c=livePreviewActivity;
     detector = FirebaseVision.getInstance().getVisionFaceDetector(options);
+    idlist=new ArrayList<>();
   }
 
   @Override
@@ -88,26 +110,58 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
       faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
     }
 
-    if(faces.size() > 0 )
+    for(int i = 0; i < faces.size(); ++i)
     {
-      FirebaseVisionFace firebaseVisionFace = faces.get(0);
-      int x = firebaseVisionFace.getBoundingBox().left;
-      int y = firebaseVisionFace.getBoundingBox().top;
-      int w = firebaseVisionFace.getBoundingBox().width();
-      int h = firebaseVisionFace.getBoundingBox().height();
-      Log.d(TAG, "onSuccess: x=" + x + " y=" + y + " w=" + w + " h=" + h);
-      if( x < 0 )
-        x = 0;
-      if( y < 0 )
-        y = 0;
-      if (x + w >= bitmap.getWidth())
-        w = (bitmap.getWidth() - x);
-      if( y + h >= bitmap.getHeight())
-        h = (bitmap.getHeight() - y);
-      Log.d(TAG, "onSuccess: x=" + x + " y=" + y + " w=" + w + " h=" + h);
+      Integer count=0;
+      FirebaseVisionFace firebaseVisionFace = faces.get(i);
+      for(int j=0;j<idlist.size();j++)
+      {
+        if(firebaseVisionFace.getTrackingId()==idlist.get(j))
+        {
+            count++;
+        }
+      }
+      if(count==0)
+      {
+        idlist.add(firebaseVisionFace.getTrackingId());
+        ImageView imageView = new ImageView(c);
+        imageView.setId(i);
+        imageView.setPadding(2, 2, 2, 2);
+
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setMaxHeight(200);
+        imageView.setMaxWidth(200);
+
+        imageView.setMinimumHeight(200);
+        imageView.setMinimumWidth(200);
+        layout.addView(imageView);
+
+        int x = firebaseVisionFace.getBoundingBox().left;
+        int y = firebaseVisionFace.getBoundingBox().top;
+        int w = firebaseVisionFace.getBoundingBox().width();
+        int h = firebaseVisionFace.getBoundingBox().height();
+        Log.d(TAG, "onSuccess: x=" + x + " y=" + y + " w=" + w + " h=" + h);
+        if( x < 0 )
+          x = 0;
+        else if( y < 0 )
+          y = 0;
+        else
+        {
+            w = (bitmap.getWidth() - x);
+            h = (bitmap.getHeight() - y);
+        }
+//        if (x + w >= bitmap.getWidth())
+//          w = (bitmap.getWidth() - x);
+//        if( y + h >= bitmap.getHeight())
+//          h = (bitmap.getHeight() - y);
+
+        Log.d(TAG, "onSuccess: x=" + x + " y=" + y + " w=" + w + " h=" + h);
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap,x,y,w,h);
         // resizedBitmap.setWidth(x+w);
         imageView.setImageBitmap(resizedBitmap);
+      }
+
+
       }
     }
 //    FirebaseVisionFace firebaseVisionFace = faces.get(0);
