@@ -18,19 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
         <activity
             android:name=".LivePreviewActivity"
             android:exported="true"></activity>
-=======
-
-        <activity android:name=".LivePreviewActivity" android:exported="true">
-        </activity>
-        <meta-data
-            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="face" />
-        <!-- To use multiple models: android:value="face,model2,model3" -->
->>>>>>> 9c7044a42bd429d58a58957dc7f7dd780a57496e
     </application>
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera" />
