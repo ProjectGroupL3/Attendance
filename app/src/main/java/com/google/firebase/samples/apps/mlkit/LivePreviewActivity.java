@@ -28,6 +28,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
@@ -54,7 +55,8 @@ public final class LivePreviewActivity extends AppCompatActivity
   private static final int PERMISSION_REQUESTS = 1;
 
   private ImageView imageView;
-
+  private LinearLayout layout;
+  private Context context;
   private CameraSource cameraSource = null;
   private CameraSourcePreview preview;
   private GraphicOverlay graphicOverlay;
@@ -64,11 +66,11 @@ public final class LivePreviewActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Log.d(TAG, "onCreate");
-
+    context=getApplicationContext();
     setContentView(R.layout.activity_live_preview);
 
-    imageView = findViewById(R.id.imgView);
-
+  //  imageView = findViewById(R.id.imgView);
+    layout = (LinearLayout) findViewById(R.id.LinearHLayout);
     preview = (CameraSourcePreview) findViewById(R.id.firePreview);
     if (preview == null) {
       Log.d(TAG, "Preview is null");
@@ -146,7 +148,7 @@ public final class LivePreviewActivity extends AppCompatActivity
       switch (model) {
         case FACE_DETECTION:
           Log.i(TAG, "Using Face Detector Processor");
-          cameraSource.setMachineLearningFrameProcessor(new FaceDetectionProcessor(imageView));
+          cameraSource.setMachineLearningFrameProcessor(new FaceDetectionProcessor(layout,this));
           break;
         default:
           Log.e(TAG, "Unknown model: " + model);
