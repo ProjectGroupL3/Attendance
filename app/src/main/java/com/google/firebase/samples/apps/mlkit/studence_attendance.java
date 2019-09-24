@@ -1,5 +1,6 @@
 package com.google.firebase.samples.apps.mlkit;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class studence_attendance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studence_attendance);
 
-
+        getSupportActionBar().setTitle("Student Attendance");
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -104,6 +105,9 @@ public class studence_attendance extends AppCompatActivity {
 
             case R.id.myprofile :
                 Toast.makeText(this, "Menu items of my profile selected!", Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(getApplicationContext(), profile.class));
+
                 return true;
 
             case R.id.logout:

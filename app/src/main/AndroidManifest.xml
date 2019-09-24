@@ -7,7 +7,8 @@
         android:icon="@drawable/mlkit"
         android:label="@string/app_name"
         android:theme="@style/MaterialTheme">
-        <activity android:name=".ChooserActivity"></activity>
+        <activity android:name=".profile"></activity>
+        <activity android:name=".ChooserActivity" />
         <activity
             android:name=".studence_attendance"
             android:exported="true"
@@ -22,12 +23,12 @@
             android:name=".LivePreviewActivity"
             android:exported="true" />
     </application>
-    <uses-feature android:name="android.hardware.camera" />
-
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
