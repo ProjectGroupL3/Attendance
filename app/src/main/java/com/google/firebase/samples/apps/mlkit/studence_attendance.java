@@ -104,14 +104,13 @@ public class studence_attendance extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.myprofile :
-                Toast.makeText(this, "Menu items of my profile selected!", Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(getApplicationContext(), profile.class));
 
                 return true;
 
             case R.id.logout:
-                Toast.makeText(this, "Menu items of log out selected!", Toast.LENGTH_SHORT).show();
+
                 return true;
 
             default:
