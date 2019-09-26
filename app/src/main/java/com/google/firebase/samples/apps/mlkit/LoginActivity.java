@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if((motionEvent.getRawX() >= (mEtMobNo.getRight() - mEtMobNo.getCompoundDrawables()[2].getBounds().width() - 20))) {
                         startActivity(new Intent(mContext,OTPActivity.class));
+                        finish();
                         return true;
                     }
                 }
