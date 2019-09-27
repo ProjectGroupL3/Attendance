@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.firebase.samples.apps.mlkit.AttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
 import com.google.firebase.samples.apps.mlkit.R;
 
@@ -46,6 +47,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity().getApplicationContext(), LivePreviewActivity.class));
+            }
+        });
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AttendanceActivity.class));
             }
         });
 
