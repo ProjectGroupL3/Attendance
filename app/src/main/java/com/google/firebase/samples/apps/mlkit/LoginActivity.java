@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity {
 
     Context mContext;
     EditText mEtMobNo;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mContext = getApplicationContext();
         mEtMobNo = findViewById(R.id.et_mobno);
+        textView = findViewById(R.id.title);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, StudentAttendance.class));
+            }
+        });
 
 
         mEtMobNo.setOnTouchListener(new View.OnTouchListener() {

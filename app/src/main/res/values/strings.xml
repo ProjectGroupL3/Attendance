@@ -41,9 +41,7 @@
     <string name="toggle_turn_off">Back</string>
     <string name="desc_camera_source_activity">Real-time Face Detection: MLKIT</string>
     <string name="desc_still_image_activity">Vision detectors demo with a still image</string>
-    <string name="pict_attendace">PICT ATTENDACE</string>
-    <string name="enter_phone_number">Enter Phone Number</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_student">Student</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -57,6 +55,9 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="pict_attendace">PICT ATTENDACE</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="take_attendance">Take Attendance</string>
     <string name="view_defaulters">View Defaulters</string>
 </resources>
