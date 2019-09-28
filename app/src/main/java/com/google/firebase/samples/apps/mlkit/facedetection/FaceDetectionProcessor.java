@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,10 +50,11 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     View v;
     Context c;
     Resources res;
+    int total;
     public Activity activity;
     String packageName;
     HashMap<Integer, ImageView> integerImageViewHashMap;
-
+    HashMap<Integer, Integer> singleFaceDetectCount;
     public FaceDetectionProcessor(Activity _activity) {
         activity=_activity;
         //res=context.getResources();
@@ -80,6 +82,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
 //        idlist=new ArrayList<>();
 //        imageViewArr = new ArrayList<>();
         integerImageViewHashMap = new HashMap<>();
+        singleFaceDetectCount = new HashMap<>();
     }
 
     @Override
@@ -103,33 +106,48 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
             @NonNull FrameMetadata frameMetadata,
             @NonNull GraphicOverlay graphicOverlay) {
         graphicOverlay.clear();
-        for (int i = 0; i < faces.size(); ++i) {
-            FirebaseVisionFace face = faces.get(i);
-            FaceGraphic faceGraphic = new FaceGraphic(graphicOverlay);
-            graphicOverlay.add(faceGraphic);
-            faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
+        total++;
+            Log.d(TAG, "onSuccess: Total: " + total);
+            for (int i = 0; i < faces.size(); ++i) {
+                FirebaseVisionFace face = faces.get(i);
+                FaceGraphic faceGraphic = new FaceGraphic(graphicOverlay);
+                graphicOverlay.add(faceGraphic);
+                faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
+                if( total % 3 == 0 )
+                {
+                    int id = face.getTrackingId();
+                    int x = face.getBoundingBox().left;
+                    int y = face.getBoundingBox().top;
+                    int w = face.getBoundingBox().width();
+                    int h = face.getBoundingBox().height();
+                    if (x < 0) x = 0;
+                    if (y < 0) y = 0;
+                    if (x + w >= bitmap.getWidth()) w = (bitmap.getWidth() - x);
+                    if (y + h >= bitmap.getHeight()) h = (bitmap.getHeight() - y);
 
-            int id = face.getTrackingId();
-
-            int x = face.getBoundingBox().left;
-            int y = face.getBoundingBox().top;
-            int w = face.getBoundingBox().width();
-            int h = face.getBoundingBox().height();
-            if (x < 0) x = 0;
-            if (y < 0) y = 0;
-            if (x + w >= bitmap.getWidth()) w = (bitmap.getWidth() - x);
-            if (y + h >= bitmap.getHeight()) h = (bitmap.getHeight() - y);
-
-            if (!integerImageViewHashMap.containsKey(id)) {
-                ImageView imageView = new ImageView(c);
-                imageView.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
-                layout.addView(imageView);
-                integerImageViewHashMap.put(id, imageView);
-            } else {
-                ImageView img = integerImageViewHashMap.get(id);
-                img.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
+                    if (!integerImageViewHashMap.containsKey(id)) {
+                        ImageView imageView = new ImageView(c);
+                        imageView.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
+                        // layout.addView(imageView);
+                        integerImageViewHashMap.put(id, imageView);
+                        singleFaceDetectCount.put(id,0);
+                    } else {
+                        int prev_count = singleFaceDetectCount.get(id);
+                        prev_count++;
+                        if( prev_count < 1 )
+                        {
+                            singleFaceDetectCount.put(id,prev_count);
+                            ImageView img = integerImageViewHashMap.get(id);
+                            img.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
+                        }
+                        else if( prev_count == 1 )
+                        {
+                            layout.removeView(integerImageViewHashMap.get(id));
+                            layout.addView(integerImageViewHashMap.get(id));
+                        }
+                    }
+                }
             }
-        }
     }
     @Override
     protected void onFailure(@NonNull Exception e) {
