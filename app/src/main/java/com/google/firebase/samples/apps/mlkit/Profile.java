@@ -1,9 +1,11 @@
 package com.google.firebase.samples.apps.mlkit;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 
-public class profile extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Profile extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

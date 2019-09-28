@@ -55,4 +55,9 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="pict_attendace">PICT ATTENDACE</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="take_attendance">Take Attendance</string>
+    <string name="view_defaulters">View Defaulters</string>
 </resources>

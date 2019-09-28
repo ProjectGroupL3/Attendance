@@ -17,9 +17,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,11 +33,9 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 import com.google.firebase.samples.apps.mlkit.FrameMetadata;
 import com.google.firebase.samples.apps.mlkit.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
-import com.google.firebase.samples.apps.mlkit.R;
 import com.google.firebase.samples.apps.mlkit.VisionProcessorBase;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,8 +60,8 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         //packageName=context.getPackageName();
         FirebaseVisionFaceDetectorOptions options =
                 new FirebaseVisionFaceDetectorOptions.Builder()
-                        .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
-                        .setTrackingEnabled(true)
+                        .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+                        .enableTracking()
                         .build();
 
 
@@ -74,8 +71,8 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     public FaceDetectionProcessor(LinearLayout layout, LivePreviewActivity livePreviewActivity) {
         FirebaseVisionFaceDetectorOptions options =
                 new FirebaseVisionFaceDetectorOptions.Builder()
-                        .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
-                        .setTrackingEnabled(true)
+                        .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+                        .enableTracking()
                         .build();
         this.layout = layout;
         c=livePreviewActivity;
@@ -96,7 +93,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
 
     @Override
     protected Task<List<FirebaseVisionFace>> detectInImage(FirebaseVisionImage image) {
-        this.bitmap =  image.getBitmapForDebugging();
+        this.bitmap =  image.getBitmap();
         return detector.detectInImage(image);
     }
 
