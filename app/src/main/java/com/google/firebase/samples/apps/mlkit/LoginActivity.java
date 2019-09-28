@@ -2,9 +2,11 @@ package com.google.firebase.samples.apps.mlkit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -15,11 +17,16 @@ public class LoginActivity extends AppCompatActivity {
     Context mContext;
     EditText mEtMobNo;
     TextView textView;
+    CreateDatabase database = new CreateDatabase();
+    int subjectId = 1;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Log.i("subjectLogin","in login activity");
+        database.updateDateOfSubject(subjectId);
         mContext = getApplicationContext();
         mEtMobNo = findViewById(R.id.et_mobno);
         textView = findViewById(R.id.title);
