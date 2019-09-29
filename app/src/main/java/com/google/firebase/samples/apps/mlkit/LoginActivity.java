@@ -9,17 +9,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity {
 
     Context mContext;
+    Context context;
     EditText mEtMobNo;
     TextView textView;
     CreateDatabase database = new CreateDatabase();
     int subjectId = 1;
-
+    String phoneNumber;
+    Button sendPhoneNumber;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +31,10 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("subjectLogin","in login activity");
        // database.updateDateOfSubject(subjectId);
         mContext = getApplicationContext();
-        mEtMobNo = findViewById(R.id.et_mobno);
-        final String phoneNumber=mEtMobNo.getText().toString();
+        context=this;
+        mEtMobNo = (EditText)findViewById(R.id.et_mobno);
+
+      //  Log.i("phone ",phoneNumber);
         textView = findViewById(R.id.title);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,22 +43,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-        mEtMobNo.setOnTouchListener(new View.OnTouchListener() {
+        sendPhoneNumber = (Button) findViewById(R.id.sendPhoneNumber);
+        sendPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if((motionEvent.getRawX() >= (mEtMobNo.getRight() - mEtMobNo.getCompoundDrawables()[2].getBounds().width() - 20))) {
-                        Intent intent = new Intent(mContext, OTPActivity.class);
-                        intent.putExtra("phoneNumber", phoneNumber);
-                        startActivity(intent);
-                        finish();
-                        return true;
-                    }
+            public void onClick(View view) {
+                phoneNumber=mEtMobNo.getText().toString().trim();
+                if(phoneNumber.isEmpty() || phoneNumber.length()<10)
+                {
+                    mEtMobNo.setError("valid number is required");
+                    mEtMobNo.requestFocus();
+                    return;
                 }
-                return false;
+                phoneNumber="+91"+phoneNumber;
+                Log.i("phone ",phoneNumber);
+                Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
+                intent.putExtra("phoneNumber", phoneNumber);
+                startActivity(intent);
             }
         });
+
 
     }
 
