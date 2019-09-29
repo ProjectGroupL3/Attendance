@@ -142,36 +142,30 @@ public class CreateDatabase {
     public void updateDateOfSubject(int subjectId) {
         Log.i("subjectdate ", "currentDate");
 
-        /*subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
                 {
+
+                    ArrayList<String> dates;
                     Subject subject = documentSnapshot.toObject(Subject.class);
-                    *//*if(subject.dates!=null) {
-                        ArrayList<String> dates = new ArrayList<>(subject.getDates());
-                    }*//*
+                    try {
+                        dates = new ArrayList<>(subject.getDates());
+                    }
+                    catch (NullPointerException e){
+                        dates = new ArrayList<>();
+                    }
+
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                     String currentDate = sdf.format(new Date());
-//                    dates.add(currentDate);
-//                    subject.setDates(dates);
-                    subject.dates.add(currentDate);
-                    Log.i("subjectdate ",currentDate);
+                    dates.add(currentDate);
+                    Log.i("subjectdate ",dates.toString() + subject.getName());
+                    subject.setDates(dates);
                     subjectCollection.document(documentSnapshot.getId()).set(subject,SetOptions.merge());
                 }
             }
-        });*/
-        studentCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                    }
-
-            }
-
-
         });
+
     }
 }

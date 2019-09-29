@@ -26,9 +26,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Log.i("subjectLogin","in login activity");
-        database.updateDateOfSubject(subjectId);
+       // database.updateDateOfSubject(subjectId);
         mContext = getApplicationContext();
         mEtMobNo = findViewById(R.id.et_mobno);
+        final String phoneNumber=mEtMobNo.getText().toString();
         textView = findViewById(R.id.title);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +44,9 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if((motionEvent.getRawX() >= (mEtMobNo.getRight() - mEtMobNo.getCompoundDrawables()[2].getBounds().width() - 20))) {
-                        startActivity(new Intent(mContext,OTPActivity.class));
+                        Intent intent = new Intent(mContext, OTPActivity.class);
+                        intent.putExtra("phoneNumber", phoneNumber);
+                        startActivity(intent);
                         finish();
                         return true;
                     }
