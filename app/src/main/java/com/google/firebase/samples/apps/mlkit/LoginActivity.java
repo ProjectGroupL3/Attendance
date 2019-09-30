@@ -11,6 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.samples.apps.mlkit.models.StudentModel;
+import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -18,10 +27,14 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     EditText mEtMobNo;
     TextView textView;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference teacherCollection = db.collection("teacherCollection");
+    CollectionReference studentCollection = db.collection("studentCollection");
     CreateDatabase database = new CreateDatabase();
     int subjectId = 1;
     String phoneNumber;
     Button sendPhoneNumber;
+    boolean isStudent=false;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Log.i("subjectLogin","in login activity");
        // database.updateDateOfSubject(subjectId);
+        //database.addStudents();
         mContext = getApplicationContext();
         context=this;
         mEtMobNo = (EditText)findViewById(R.id.et_mobno);
@@ -53,11 +67,44 @@ public class LoginActivity extends AppCompatActivity {
                     mEtMobNo.requestFocus();
                     return;
                 }
-                phoneNumber="+91"+phoneNumber;
+
                 Log.i("phone ",phoneNumber);
-                Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
-                intent.putExtra("phoneNumber", phoneNumber);
-                startActivity(intent);
+                studentCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(!queryDocumentSnapshots.isEmpty())
+                        {
+                            isStudent=true;
+                            phoneNumber="+91"+phoneNumber;
+
+                            Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
+                            intent.putExtra("phoneNumber", phoneNumber);
+                            intent.putExtra("isStudent",isStudent);
+                            startActivity(intent);
+                        }
+                        else{
+                            teacherCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    if (queryDocumentSnapshots.isEmpty()) {
+                                        Toast.makeText(mContext, "Enter valid phone number !!", Toast.LENGTH_SHORT).show();
+                                    } else{
+                                        isStudent=false;
+                                        phoneNumber="+91"+phoneNumber;
+
+                                        Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
+                                        intent.putExtra("phoneNumber", phoneNumber);
+                                        intent.putExtra("isStudent",isStudent);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                });
+
+
             }
         });
 

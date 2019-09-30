@@ -2,9 +2,14 @@ package com.google.firebase.samples.apps.mlkit;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -101,7 +106,6 @@ public class CreateDatabase {
     }
 
     public void addStudents() {
-/*
         Allsubjects.add(new SubjectInStudentModel(1, null));
         Allsubjects.add(new SubjectInStudentModel(2, null));
         Allsubjects.add(new SubjectInStudentModel(3, null));
@@ -109,29 +113,15 @@ public class CreateDatabase {
         Allsubjects.add(new SubjectInStudentModel(5, null));
         Allsubjects.add(new SubjectInStudentModel(6, null));
 
-        students.add(new StudentModel("c2k17105589", "mandar", "te3", Allsubjects));
-        students.add(new StudentModel("c2k17105590", "x", "te3", Allsubjects));
-        students.add(new StudentModel("c2k17105591", "y", "te3", Allsubjects));
-        students.add(new StudentModel("c2k17105592", "z", "te3", Allsubjects));
-        students.add(new StudentModel("c2k17105593", "a", "te3", Allsubjects));
-        students.add(new StudentModel("c2k17105594", "b", "te3", Allsubjects));
-        students.add(new StudentModel("c2k17105595", "c", "te3", Allsubjects));
+        students.add(new StudentModel("c2k17105589", "mandar", "te3","8080533154",Allsubjects));
+        students.add(new StudentModel("c2k17105590", "yash", "te3","9503093490", Allsubjects));
+        students.add(new StudentModel("c2k17105591", "harsh", "te3","7798762945", Allsubjects));
+
 
         for (int i = 0; i < students.size(); i++) {
-            studentCollection.add(students.get(i))
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(TeacherAttendanceActivity.this, "succesfully added", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(TeacherAttendanceActivity.this, "Failed to add", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-            }*/
+                 studentCollection.add(students.get(i));
+
+            }
 
     }
 

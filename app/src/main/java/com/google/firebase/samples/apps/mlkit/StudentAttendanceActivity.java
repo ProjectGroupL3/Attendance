@@ -5,28 +5,53 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.adapters.StudentAttendanceAdapter;
 import com.google.firebase.samples.apps.mlkit.models.StudentAttendanceModel;
+import com.google.firebase.samples.apps.mlkit.models.StudentModel;
 
 import java.util.ArrayList;
 
 public class StudentAttendanceActivity extends AppCompatActivity {
-
-    RecyclerView mRecyclerView;
-    StudentAttendanceAdapter studentAttendanceAdapter;
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference studentCollection = db.collection("studentCollection");
+    private RecyclerView mRecyclerView;
+    private StudentAttendanceAdapter studentAttendanceAdapter;
+    private TextView studentNameTextView;
+    private String studentName;
+    private String phoneNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studence_attendance);
 
         getSupportActionBar().setTitle("StudentModel Attendance");
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
+        studentNameTextView = (TextView) findViewById(R.id.textView2);
+
+        studentCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
+                {
+                    StudentModel student = documentSnapshot.toObject(StudentModel.class);
+                    studentName=student.getName();
+                }
+            }
+        });
+        studentNameTextView.setText(studentName);
+
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

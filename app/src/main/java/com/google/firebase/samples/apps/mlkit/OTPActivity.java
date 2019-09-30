@@ -30,6 +30,7 @@ public class OTPActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText editText;
     String phoneNumber;
+    boolean isStudent;
     Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class OTPActivity extends AppCompatActivity {
         editText = findViewById(R.id.editText);
 
         phoneNumber = getIntent().getStringExtra("phoneNumber");
+
+        isStudent = getIntent().getBooleanExtra("isStudent",true);
+
         sendVerificationCode(phoneNumber);
 
         btnVerify.setOnClickListener(new View.OnClickListener() {
@@ -77,10 +81,23 @@ public class OTPActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if(isStudent)
+                            {
+                                Intent intent = new Intent(OTPActivity.this,StudentAttendanceActivity.class);
+                                intent.putExtra("phoneNumber",phoneNumber);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                            else
+                            {
+                                Intent intent = new Intent(OTPActivity.this, TeacherAttendanceActivity.class);
+                                intent.putExtra("phoneNumber",phoneNumber);
 
-                            Intent intent = new Intent(OTPActivity.this, TeacherAttendanceActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+
+
 
                         } else {
 
