@@ -120,6 +120,10 @@ public class OTPActivity extends AppCompatActivity {
                 verifyCode(code);
 
             }
+            else {
+                Toast.makeText(mContext, "Instant Verified", Toast.LENGTH_SHORT).show();
+                signInWithCredential(phoneAuthCredential);
+            }
 
         }
 
