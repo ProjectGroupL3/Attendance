@@ -7,10 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,29 +50,41 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        sendPhoneNumber = (Button) findViewById(R.id.sendPhoneNumber);
-        sendPhoneNumber.setOnClickListener(new View.OnClickListener() {
+        mEtMobNo.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                phoneNumber=mEtMobNo.getText().toString().trim();
-                if(phoneNumber.isEmpty() || phoneNumber.length()<10)
-                {
-                    mEtMobNo.setError("valid number is required");
-                    mEtMobNo.requestFocus();
-                    return;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if((motionEvent.getRawX() >= (mEtMobNo.getRight() - mEtMobNo.getCompoundDrawables()[2].getBounds().width() - 20))) {
+                        if(validate())
+                            validateUserLogin();
+                        return true;
+                    }
                 }
-                phoneNumber="+91"+phoneNumber;
-                Log.i("phone ",phoneNumber);
-                Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
-                intent.putExtra("phoneNumber", phoneNumber);
-                startActivity(intent);
+                return false;
             }
         });
-
-
     }
 
-    private void initialize() {
+    private void validateUserLogin() {
+        phoneNumber=mEtMobNo.getText().toString().trim();
+        phoneNumber="+91"+phoneNumber;
+        Log.i("phone ",phoneNumber);
+        Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
+        intent.putExtra("phoneNumber", phoneNumber);
+        startActivity(intent);
+    }
+
+    private boolean validate() {
+        if(mEtMobNo.getText().length() != 10) {
+            mEtMobNo.setError("Invalid mobile number ");
+            mEtMobNo.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private void initialize()
+    {
 
     }
 }
