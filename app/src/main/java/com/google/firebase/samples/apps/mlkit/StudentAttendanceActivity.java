@@ -1,6 +1,8 @@
 package com.google.firebase.samples.apps.mlkit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.adapters.StudentAttendanceAdapter;
 import com.google.firebase.samples.apps.mlkit.models.StudentAttendanceModel;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.util.ArrayList;
 
@@ -30,26 +33,24 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private StudentAttendanceAdapter studentAttendanceAdapter;
     private TextView studentNameTextView;
     private String studentName;
-    private String phoneNumber;
+    private SharedPref sharedPref;
+    private SharedPreferences sharedPreferences;
+    private String nameOfSharedPref;
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studence_attendance);
 
         getSupportActionBar().setTitle("StudentModel Attendance");
-        phoneNumber = getIntent().getStringExtra("phoneNumber");
+        mContext = this;
         studentNameTextView = (TextView) findViewById(R.id.textView2);
+        sharedPref=new SharedPref(mContext);
+        nameOfSharedPref = sharedPref.getPREF_NAME();
+        sharedPreferences = sharedPref.getSharedPreferences();
+        studentName = sharedPreferences.getString("NAME","");
 
-        studentCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                {
-                    StudentModel student = documentSnapshot.toObject(StudentModel.class);
-                    studentName=student.getName();
-                }
-            }
-        });
         studentNameTextView.setText(studentName);
 
 

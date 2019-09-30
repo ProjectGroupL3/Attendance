@@ -18,8 +18,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.Document;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
 import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,9 +34,13 @@ public class LoginActivity extends AppCompatActivity {
     CollectionReference studentCollection = db.collection("studentCollection");
     CreateDatabase database = new CreateDatabase();
     int subjectId = 1;
-    String phoneNumber;
+    private String phoneNumber;
     Button sendPhoneNumber;
     boolean isStudent=false;
+    private String name;
+    private String division;
+    private String studentId;
+    private SharedPref sharedPref;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +82,14 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             isStudent=true;
                             phoneNumber="+91"+phoneNumber;
-
+                            DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                            StudentModel student = document.toObject(StudentModel.class);
+                            name = student.getName();
+                            studentId = student.getId();
+                            division = student.getDiv();
+                            sharedPref=new SharedPref(mContext,studentId,name,phoneNumber,division);
                             Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
-                            intent.putExtra("phoneNumber", phoneNumber);
-                            intent.putExtra("isStudent",isStudent);
+                            intent.putExtra("phoneNumber",phoneNumber);
                             startActivity(intent);
                         }
                         else{
