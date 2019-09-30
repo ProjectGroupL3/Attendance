@@ -30,10 +30,10 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
-import com.google.firebase.samples.apps.mlkit.FrameMetadata;
-import com.google.firebase.samples.apps.mlkit.GraphicOverlay;
+import com.google.firebase.samples.apps.mlkit.others.FrameMetadata;
+import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
-import com.google.firebase.samples.apps.mlkit.VisionProcessorBase;
+import com.google.firebase.samples.apps.mlkit.others.VisionProcessorBase;
 
 import java.io.IOException;
 import java.util.HashMap;

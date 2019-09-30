@@ -30,6 +30,9 @@ import android.view.SurfaceHolder;
 import android.view.WindowManager;
 
 import com.google.android.gms.common.images.Size;
+import com.google.firebase.samples.apps.mlkit.others.FrameMetadata;
+import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
+import com.google.firebase.samples.apps.mlkit.others.VisionImageProcessor;
 
 import java.io.IOException;
 import java.lang.Thread.State;

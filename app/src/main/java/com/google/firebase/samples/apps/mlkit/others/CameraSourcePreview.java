@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.others;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -22,6 +22,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
+import com.google.firebase.samples.apps.mlkit.CameraSource;
 
 import java.io.IOException;
 

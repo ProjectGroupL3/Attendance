@@ -11,8 +11,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.samples.apps.mlkit.models.StudentModel;
 
-public class Profile extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
     TextView studentId;
     TextView name;
     TextView className;
@@ -37,7 +38,7 @@ public class Profile extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(DocumentSnapshot documentSnapshot:queryDocumentSnapshots)
                 {
-                    Student student = documentSnapshot.toObject(Student.class);
+                    StudentModel student = documentSnapshot.toObject(StudentModel.class);
                     studentId.setText("Id : "+student.getId());
                     name.setText("Name : "+student.getName());
                     className.setText("Class : "+student.getDiv());
@@ -47,6 +48,6 @@ public class Profile extends AppCompatActivity {
         });
 
 
-        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setTitle("ProfileActivity");
     }
 }

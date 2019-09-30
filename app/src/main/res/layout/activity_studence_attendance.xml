@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:padding="5dp"
-    tools:context=".StudentAttendance">
+    tools:context=".StudentAttendanceActivity">
 
     <TextView
         android:id="@+id/textView2"

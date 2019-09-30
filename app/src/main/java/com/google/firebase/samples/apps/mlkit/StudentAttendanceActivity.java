@@ -11,79 +11,82 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.samples.apps.mlkit.adapters.StudentAttendanceAdapter;
+import com.google.firebase.samples.apps.mlkit.models.StudentAttendanceModel;
+
 import java.util.ArrayList;
 
-public class StudentAttendance extends AppCompatActivity {
+public class StudentAttendanceActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
-    MyAdapter myAdapter;
+    StudentAttendanceAdapter studentAttendanceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studence_attendance);
 
-        getSupportActionBar().setTitle("Student Attendance");
+        getSupportActionBar().setTitle("StudentModel Attendance");
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        myAdapter = new MyAdapter(this, getMyList());
+        studentAttendanceAdapter = new StudentAttendanceAdapter(this, getMyList());
 
-        mRecyclerView.setAdapter(myAdapter);
+        mRecyclerView.setAdapter(studentAttendanceAdapter);
 
     }
 
-    public ArrayList<Model> getMyList() {
+    public ArrayList<StudentAttendanceModel> getMyList() {
 
-        ArrayList<Model> models = new ArrayList<>();
-        Model m =new Model();
+        ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
+        StudentAttendanceModel m =new StudentAttendanceModel();
 
         m.setSubject("CE DBMS TH");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE CN TH");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE TOC TH");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE SE & PM TH");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE IS & EE TH");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE CN PR");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE DBMS PR");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE SDL PR");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        m =new Model();
+        m =new StudentAttendanceModel();
         m.setSubject("CE SDL TUT");
         m.setPercent("100%");
-        models.add(m);
+        studentAttendanceModels.add(m);
 
-        return models;
+        return studentAttendanceModels;
     }
 
     @Override
@@ -104,7 +107,7 @@ public class StudentAttendance extends AppCompatActivity {
 
             case R.id.myprofile :
 
-                startActivity(new Intent(getApplicationContext(), Profile.class));
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
 
                 return true;
 

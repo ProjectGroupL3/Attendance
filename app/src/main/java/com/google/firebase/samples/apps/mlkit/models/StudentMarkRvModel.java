@@ -1,10 +1,10 @@
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.models;
 
-public class StudentModel {
+public class StudentMarkRvModel {
     String name,rollNumber;
     boolean lecture1,lecture2;
 
-    public StudentModel(String name, String rollNumber, boolean lecture1, boolean lecture2) {
+    public StudentMarkRvModel(String name, String rollNumber, boolean lecture1, boolean lecture2) {
         this.name = name;
         this.rollNumber = rollNumber;
         this.lecture1 = lecture1;

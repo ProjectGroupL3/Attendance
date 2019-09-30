@@ -11,11 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.others;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.hardware.camera2.CameraCharacteristics;
 import android.util.AttributeSet;
 import android.view.View;
 

@@ -1,14 +1,14 @@
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.models;
 
 import java.util.ArrayList;
 
-public class Teacher {
+public class TeacherModel {
     String name;
     int id;
     String phoneNumber;
     ArrayList<Integer> subjectId=new ArrayList<>();
-    public Teacher(){}
-    public Teacher(int id,String name,String phoneNumber)
+    public TeacherModel(){}
+    public TeacherModel(int id, String name, String phoneNumber)
     {
         this.id=id;
         this.name=name;

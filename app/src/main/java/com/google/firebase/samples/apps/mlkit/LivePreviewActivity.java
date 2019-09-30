@@ -34,6 +34,8 @@ import android.widget.ToggleButton;
 
 import com.google.android.gms.common.annotation.KeepName;
 import com.google.firebase.samples.apps.mlkit.facedetection.FaceDetectionProcessor;
+import com.google.firebase.samples.apps.mlkit.others.CameraSourcePreview;
+import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
 
 import java.io.IOException;
 import java.util.ArrayList;

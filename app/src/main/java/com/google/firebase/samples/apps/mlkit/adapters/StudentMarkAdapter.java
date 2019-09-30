@@ -1,4 +1,4 @@
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,15 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.samples.apps.mlkit.R;
+import com.google.firebase.samples.apps.mlkit.models.StudentMarkRvModel;
+
 import java.util.ArrayList;
 
-public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttendanceAdapter.MyViewHolder>{
+public class StudentMarkAdapter extends RecyclerView.Adapter<StudentMarkAdapter.MyViewHolder>{
 
     private Context context;
-    private ArrayList<StudentModel> studentModels;
+    private ArrayList<StudentMarkRvModel> studentModels;
     private int numLectures;
 
-    public StudentAttendanceAdapter(Context context, ArrayList<StudentModel> studentModels, int numOfLectures) {
+    public StudentMarkAdapter(Context context, ArrayList<StudentMarkRvModel> studentModels, int numOfLectures) {
         this.context = context;
         this.studentModels = studentModels;
         this.numLectures = numOfLectures;
@@ -33,11 +36,11 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        StudentModel studentModel = studentModels.get(position);
+        StudentMarkRvModel studentModel = studentModels.get(position);
         holder.name.setText(studentModel.getName());
         holder.rollNumber.setText(studentModel.getRollNumber());
-        holder.lecture1.setChecked(studentModel.lecture1);
-        holder.lecture2.setChecked(studentModel.lecture2);
+        holder.lecture1.setChecked(studentModel.isLecture1());
+        holder.lecture2.setChecked(studentModel.isLecture2());
     }
 
     @Override

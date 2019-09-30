@@ -11,13 +11,13 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".AttendanceActivity"
             android:theme="@style/activity_custom" />
-        <activity android:name=".Profile" />
+        <activity android:name=".ProfileActivity" />
         <activity
-            android:name=".StudentAttendance"
+            android:name=".StudentAttendanceActivity"
             android:exported="true"
             android:label="@string/app_name" />
         <activity
-            android:name=".MainActivity"
+            android:name=".TeacherAttendanceActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/activity_custom" />
         <activity android:name=".OTPActivity"
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChooserActivity"
+            android:name=".others.ChooserActivity"
             android:exported="true"
             android:label="@string/app_name" />
         <activity

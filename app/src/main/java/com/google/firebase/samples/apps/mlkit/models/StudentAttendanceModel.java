@@ -1,6 +1,6 @@
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.models;
 
-public class Model {
+public class StudentAttendanceModel {
 
     public String subject, percent;
 

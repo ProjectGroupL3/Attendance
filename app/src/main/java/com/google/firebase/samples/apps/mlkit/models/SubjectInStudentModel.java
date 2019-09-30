@@ -1,11 +1,11 @@
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.models;
 
 import java.util.ArrayList;
 
-public class SubjectInStudent {
+public class SubjectInStudentModel {
     int id;
     ArrayList<String> dates=new ArrayList<String>();
-    public SubjectInStudent()
+    public SubjectInStudentModel()
     {
 
     }
@@ -13,7 +13,7 @@ public class SubjectInStudent {
     public int getId() {
         return id;
     }
-    public SubjectInStudent(int id,ArrayList<String> dates)
+    public SubjectInStudentModel(int id, ArrayList<String> dates)
     {
         this.id=id;
         this.dates=dates;

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.google.firebase.samples.apps.mlkit;
+package com.google.firebase.samples.apps.mlkit.others;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +31,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
+import com.google.firebase.samples.apps.mlkit.R;
 
 import java.util.ArrayList;
 import java.util.List;
