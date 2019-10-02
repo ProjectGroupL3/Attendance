@@ -27,12 +27,12 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        studentIdView = findViewById(R.id.textView4);
-        nameView = findViewById(R.id.textView5);
-        classNameView = findViewById(R.id.textView6);
+        studentIdView = findViewById(R.id.tv_profile_id);
+        nameView = findViewById(R.id.tv_profile_name);
+        classNameView = findViewById(R.id.tv_profile_class);
         mContext = this;
         sharedPref = new SharedPref(mContext);
-        studentIdView.setText(sharedPref.getSTUDENT_ID());
+        studentIdView.setText(sharedPref.getID());
         nameView.setText(sharedPref.getNAME());
         classNameView.setText(sharedPref.getDIVISION());
 

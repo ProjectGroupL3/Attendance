@@ -48,9 +48,22 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Log.i("subjectLogin","in login activity");
-
         mContext = getApplicationContext();
+        sharedPref = new SharedPref(mContext);
+        if(sharedPref.isLoggedIn())
+        {
+            if(sharedPref.isStudent())
+            {
+                startActivity(new Intent(mContext,StudentAttendanceActivity.class));
+                finish();
+            }
+            else
+            {
+                startActivity(new Intent(mContext,TeacherAttendanceActivity.class));
+                finish();
+            }
+        }
+        Log.i("subjectLogin","in login activity");
         context=this;
         mEtMobNo = (EditText)findViewById(R.id.et_mobno);
 
@@ -77,12 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                         return true;
                     }
                 }
-
-
-
-
-
-                return false;
+            return false;
             }
         });
     }
@@ -117,10 +125,8 @@ public class LoginActivity extends AppCompatActivity {
                                 TeacherModel teacher = document.toObject(TeacherModel.class);
                                 name = teacher.getName();
                                 teacherId = teacher.getId();
-                                sharedPref=new SharedPref(mContext, teacherId,name,phoneNumber,isStudent);
-
+                                sharedPref=new SharedPref(mContext, String.valueOf(teacherId),name,phoneNumber,"",isStudent);
                                 phoneNumber="+91"+phoneNumber;
-
                                 Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
                                 intent.putExtra("phoneNumber", phoneNumber);
                                 intent.putExtra("isStudent",isStudent);
