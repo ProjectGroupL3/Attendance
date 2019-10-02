@@ -148,9 +148,4 @@ public class LoginActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    private void initialize()
-    {
-
-    }
 }
