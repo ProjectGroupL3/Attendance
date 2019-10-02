@@ -65,8 +65,6 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                         .enableTracking()
                         .build();
-
-
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options);
     }
 
@@ -144,6 +142,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         {
                             layout.removeView(integerImageViewHashMap.get(id));
                             layout.addView(integerImageViewHashMap.get(id));
+
                         }
                     }
                 }

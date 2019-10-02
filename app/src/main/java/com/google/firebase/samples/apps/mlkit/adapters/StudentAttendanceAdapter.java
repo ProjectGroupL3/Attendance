@@ -29,7 +29,7 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row, null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row,viewGroup,false);
 
         return new MyHolder(view);
     }
@@ -37,9 +37,9 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
     @Override
     public void onBindViewHolder(@NonNull MyHolder myHolder, int i) {
 
-        myHolder.subject1.setText(studentAttendanceModels.get(i).getSubject());
-        myHolder.percent1.setText(studentAttendanceModels.get(i).getPercent());
-
+        myHolder.subjectName.setText(studentAttendanceModels.get(i).getSubject());
+        myHolder.percent.setText(studentAttendanceModels.get(i).getPercent());
+        myHolder.subjectType.setText(studentAttendanceModels.get(i).getType());
     }
 
     @Override
@@ -48,12 +48,13 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
     }
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        TextView subject1,percent1;
+        TextView subjectName,percent,subjectType;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            this.subject1 = itemView.findViewById(R.id.subject1);
-            this.percent1 = itemView.findViewById(R.id.percent1);
+            this.subjectName = itemView.findViewById(R.id.subject1);
+            this.percent = itemView.findViewById(R.id.percent1);
+            this.subjectType = itemView.findViewById(R.id.subject2);
         }
     }
 
