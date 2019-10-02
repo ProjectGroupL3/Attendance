@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +22,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
     StudentAttendanceAdapter studentAttendanceAdapter;
+    CardView profileCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,13 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        profileCard = findViewById(R.id.cv_student_info);
+        profileCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StudentAttendanceActivity.this,ProfileActivity.class));
+            }
+        });
 
         studentAttendanceAdapter = new StudentAttendanceAdapter(this, getMyList());
 
@@ -42,48 +52,57 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
         StudentAttendanceModel m =new StudentAttendanceModel();
 
-        m.setSubject("CE DBMS TH");
-        m.setPercent("100%");
+        m.setSubject("Ce Cnl Pr");
+        m.setType("Practical");
+        m.setPercent("83.33%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE CN TH");
-        m.setPercent("100%");
+        m.setSubject("Ce Computer Networks Th");
+        m.setType("Lecture");
+        m.setPercent("86.79%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE TOC TH");
-        m.setPercent("100%");
+        m.setSubject("Ce Database Management Systems Th");
+        m.setType("Lecture");
+        m.setPercent("82.86%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE SE & PM TH");
-        m.setPercent("100%");
+        m.setSubject("Ce Dbmsl Pr");
+        m.setType("Practical");
+        m.setPercent("85.0%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE IS & EE TH");
-        m.setPercent("100%");
+        m.setSubject("Ce Information Systems And Engineering Economics Th");
+        m.setType("Lecture");
+        m.setPercent("87.88%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE CN PR");
-        m.setPercent("100%");
+        m.setSubject("Ce Skills Development Lab Pr");
+        m.setType("Practical");
+        m.setPercent("91.3%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE DBMS PR");
-        m.setPercent("100%");
+        m.setSubject("Ce Skills Development Lab Pr");
+        m.setType("Practical");
+        m.setPercent("76.67%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE SDL PR");
-        m.setPercent("100%");
+        m.setSubject("Ce Software Engineering & Project Management Th");
+        m.setType("Lecture");
+        m.setPercent("69.23%");
         studentAttendanceModels.add(m);
 
         m =new StudentAttendanceModel();
-        m.setSubject("CE SDL TUT");
-        m.setPercent("100%");
+        m.setSubject("Ce Theory of Computation");
+        m.setType("Lecture");
+        m.setPercent("82.93%");
         studentAttendanceModels.add(m);
 
         return studentAttendanceModels;
