@@ -1,6 +1,7 @@
 package com.google.firebase.samples.apps.mlkit;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -12,41 +13,28 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 public class ProfileActivity extends AppCompatActivity {
-    TextView studentId;
-    TextView name;
-    TextView className;
-    TextView phoneNumber;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference studentCollection = db.collection("studentCollection");
-    String enteredName;
+    TextView studentIdView;
+    TextView nameView;
+    TextView classNameView;
+    TextView phoneNumberView;
+    SharedPref sharedPref;
+    Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        enteredName = "mandar";
-
-        studentId = findViewById(R.id.textView4);
-        name = findViewById(R.id.textView5);
-        className = findViewById(R.id.textView6);
-
-
-        studentCollection.whereEqualTo("name",enteredName).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot documentSnapshot:queryDocumentSnapshots)
-                {
-                    StudentModel student = documentSnapshot.toObject(StudentModel.class);
-                    studentId.setText("Id : "+student.getId());
-                    name.setText("Name : "+student.getName());
-                    className.setText("Class : "+student.getDiv());
-
-                }
-            }
-        });
-
+        studentIdView = findViewById(R.id.textView4);
+        nameView = findViewById(R.id.textView5);
+        classNameView = findViewById(R.id.textView6);
+        mContext = this;
+        sharedPref = new SharedPref(mContext);
+        studentIdView.setText(sharedPref.getSTUDENT_ID());
+        nameView.setText(sharedPref.getNAME());
+        classNameView.setText(sharedPref.getDIVISION());
 
         getSupportActionBar().setTitle("ProfileActivity");
     }

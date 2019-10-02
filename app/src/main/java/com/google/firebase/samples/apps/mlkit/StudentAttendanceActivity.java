@@ -34,8 +34,6 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private TextView studentNameTextView;
     private String studentName;
     private SharedPref sharedPref;
-    private SharedPreferences sharedPreferences;
-    private String nameOfSharedPref;
     private Context mContext;
 
     @Override
@@ -47,9 +45,8 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         mContext = this;
         studentNameTextView = (TextView) findViewById(R.id.textView2);
         sharedPref=new SharedPref(mContext);
-        nameOfSharedPref = sharedPref.getPREF_NAME();
-        sharedPreferences = sharedPref.getSharedPreferences();
-        studentName = sharedPreferences.getString("NAME","");
+
+        studentName = sharedPref.getNAME();
 
         studentNameTextView.setText(studentName);
 

@@ -18,9 +18,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.model.Document;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
-import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
+import com.google.firebase.samples.apps.mlkit.models.TeacherModel;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private String name;
     private String division;
     private String studentId;
+    private int teacherId;
     private SharedPref sharedPref;
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                             name = student.getName();
                             studentId = student.getId();
                             division = student.getDiv();
-                            sharedPref=new SharedPref(mContext,studentId,name,phoneNumber,division);
+                            sharedPref=new SharedPref(mContext, studentId,name,phoneNumber,division,isStudent);
                             Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
                             intent.putExtra("phoneNumber",phoneNumber);
                             startActivity(intent);
@@ -100,6 +100,12 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(mContext, "Enter valid phone number !!", Toast.LENGTH_SHORT).show();
                                     } else{
                                         isStudent=false;
+                                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                                        TeacherModel teacher = document.toObject(TeacherModel.class);
+                                        name = teacher.getName();
+                                        teacherId = teacher.getId();
+                                        sharedPref=new SharedPref(mContext, teacherId,name,phoneNumber,isStudent);
+
                                         phoneNumber="+91"+phoneNumber;
 
                                         Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
