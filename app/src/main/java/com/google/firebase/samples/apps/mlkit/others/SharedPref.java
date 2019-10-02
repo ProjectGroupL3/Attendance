@@ -55,13 +55,15 @@ public class SharedPref {
         return sharedPreferences.getBoolean(IS_LOGGED_IN,false);
     }
 
-//    public void logout() {
-//        editor.remove(IS_LOGGED_IN);
-//        editor.remove(NAME);
-//        editor.remove(MOBILE);
-//        editor.remove(IS_USER);
-//        editor.commit();
-//    }*/
+    public void logout() {
+
+        editor.remove(NAME);
+        editor.remove(MOBILE);
+        editor.remove(ID);
+        editor.remove(DIVISION);
+        editor.remove(IS_STUDENT);
+        editor.commit();
+    }
 
     public String getNAME() {
         return sharedPreferences.getString("NAME","");

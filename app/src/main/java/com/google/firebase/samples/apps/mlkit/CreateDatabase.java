@@ -125,33 +125,5 @@ public class CreateDatabase {
 
     }
 
-    public void updateDateOfSubject(int subjectId) {
-        Log.i("subjectdate ", "currentDate");
 
-        subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                {
-
-                    ArrayList<String> dates;
-                    SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
-                    try {
-                        dates = new ArrayList<>(subjectModel.getDates());
-                    }
-                    catch (NullPointerException e){
-                        dates = new ArrayList<>();
-                    }
-
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                    String currentDate = sdf.format(new Date());
-                    dates.add(currentDate);
-                    Log.i("subjectdate ",dates.toString() + subjectModel.getName());
-                    subjectModel.setDates(dates);
-                    subjectCollection.document(documentSnapshot.getId()).set(subjectModel,SetOptions.merge());
-                }
-            }
-        });
-
-    }
 }

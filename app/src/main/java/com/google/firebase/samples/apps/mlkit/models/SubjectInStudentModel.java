@@ -20,4 +20,16 @@ public class SubjectInStudentModel {
 
 
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ArrayList<String> getDates() {
+        return dates;
+    }
+
+    public void setDates(ArrayList<String> dates) {
+        this.dates = dates;
+    }
 }

@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +55,7 @@ public class OTPActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
         mContext = OTPActivity.this;
-        btnVerify = findViewById(R.id.btn_verify);
+        btnVerify = findViewById(R.id.btn_logout);
         mEtOtp1 = findViewById(R.id.otp_edit_text1);
         mEtOtp2 = findViewById(R.id.otp_edit_text2);
         mEtOtp3 = findViewById(R.id.otp_edit_text3);
