@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
 import com.google.firebase.samples.apps.mlkit.models.TeacherModel;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,8 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Log.i("subjectLogin","in login activity");
-       // database.updateDateOfSubject(subjectId);
-        //database.addStudents();
+
         mContext = getApplicationContext();
         context=this;
         mEtMobNo = (EditText)findViewById(R.id.et_mobno);
@@ -62,72 +63,88 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        sendPhoneNumber = (Button) findViewById(R.id.sendPhoneNumber);
-        sendPhoneNumber.setOnClickListener(new View.OnClickListener() {
+        mEtMobNo.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                phoneNumber=mEtMobNo.getText().toString().trim();
-                if(phoneNumber.isEmpty() || phoneNumber.length()<10)
-                {
-                    mEtMobNo.setError("valid number is required");
-                    mEtMobNo.requestFocus();
-                    return;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if((motionEvent.getRawX() >= (mEtMobNo.getRight() - mEtMobNo.getCompoundDrawables()[2].getBounds().width() - 20))) {
+                        if(validate())
+                        {
+                            phoneNumber = mEtMobNo.getText().toString();
+                            validateUserLogin();
+                        }
+
+                        return true;
+                    }
                 }
 
-                Log.i("phone ",phoneNumber);
-                studentCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(!queryDocumentSnapshots.isEmpty())
-                        {
-                            isStudent=true;
-                            phoneNumber="+91"+phoneNumber;
-                            DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                            StudentModel student = document.toObject(StudentModel.class);
-                            name = student.getName();
-                            studentId = student.getId();
-                            division = student.getDiv();
-                            sharedPref=new SharedPref(mContext, studentId,name,phoneNumber,division,isStudent);
-                            Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
-                            intent.putExtra("phoneNumber",phoneNumber);
-                            startActivity(intent);
+
+
+
+
+                return false;
+            }
+        });
+    }
+
+    private void validateUserLogin() {
+        studentCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(!queryDocumentSnapshots.isEmpty())
+                {
+                    isStudent=true;
+                    phoneNumber="+91"+phoneNumber;
+                    DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                    StudentModel student = document.toObject(StudentModel.class);
+                    name = student.getName();
+                    studentId = student.getId();
+                    division = student.getDiv();
+                    sharedPref=new SharedPref(mContext, studentId,name,phoneNumber,division,isStudent);
+                    Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
+                    intent.putExtra("phoneNumber",phoneNumber);
+                    startActivity(intent);
+                }
+                else{
+                    teacherCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (queryDocumentSnapshots.isEmpty()) {
+                                Toast.makeText(mContext, "Enter valid phone number !!", Toast.LENGTH_SHORT).show();
+                            } else{
+                                isStudent=false;
+                                DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                                TeacherModel teacher = document.toObject(TeacherModel.class);
+                                name = teacher.getName();
+                                teacherId = teacher.getId();
+                                sharedPref=new SharedPref(mContext, teacherId,name,phoneNumber,isStudent);
+
+                                phoneNumber="+91"+phoneNumber;
+
+                                Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
+                                intent.putExtra("phoneNumber", phoneNumber);
+                                intent.putExtra("isStudent",isStudent);
+                                startActivity(intent);
+                            }
                         }
-                        else{
-                            teacherCollection.whereEqualTo("phoneNumber",phoneNumber).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    if (queryDocumentSnapshots.isEmpty()) {
-                                        Toast.makeText(mContext, "Enter valid phone number !!", Toast.LENGTH_SHORT).show();
-                                    } else{
-                                        isStudent=false;
-                                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                                        TeacherModel teacher = document.toObject(TeacherModel.class);
-                                        name = teacher.getName();
-                                        teacherId = teacher.getId();
-                                        sharedPref=new SharedPref(mContext, teacherId,name,phoneNumber,isStudent);
-
-                                        phoneNumber="+91"+phoneNumber;
-
-                                        Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
-                                        intent.putExtra("phoneNumber", phoneNumber);
-                                        intent.putExtra("isStudent",isStudent);
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-                        }
-
-                    }
-                });
-
+                    });
+                }
 
             }
         });
-
-
     }
 
-    private void initialize() {
+    private boolean validate() {
+        if(mEtMobNo.getText().length() != 10) {
+            mEtMobNo.setError("Invalid mobile number ");
+            mEtMobNo.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private void initialize()
+    {
 
     }
 }
