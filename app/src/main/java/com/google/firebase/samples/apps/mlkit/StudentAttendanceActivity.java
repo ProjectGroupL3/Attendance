@@ -69,9 +69,11 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         studentNameTextView = findViewById(R.id.tv_student_name);
         studentNameTextView.setText(studentName);
 
-
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        getMyList();
         profileCard = findViewById(R.id.cv_student_info);
         profileCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +82,9 @@ public class StudentAttendanceActivity extends AppCompatActivity {
             }
         });
 
-        studentAttendanceAdapter = new StudentAttendanceAdapter(this, getMyList());
-
-        mRecyclerView.setAdapter(studentAttendanceAdapter);
-
     }
 
-    public ArrayList<StudentAttendanceModel> getMyList() {
+    public void getMyList() {
 
         studentCollection.whereEqualTo("id",studentId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -95,38 +93,45 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                 StudentModel student = documentSnapshot.toObject(StudentModel.class);
                 subjects = student.getSubjects();
 
+
+                for(final SubjectInStudentModel subject : subjects)
+                {
+                    int subjectId = subject.getId();
+                    attendedCount.add(subject.getDates().size());
+                    subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                            SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
+                            if(subjectModel.getDates() == null)
+                                subjectModel.setDates(new ArrayList<String>());
+                            totalCount.add(subjectModel.getDates().size());
+                            nameOfSubject.add(subjectModel.getName());
+
+                            ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
+                            for(int i=0;i<nameOfSubject.size();i++)
+                            {
+                                StudentAttendanceModel studentAttendanceModel = new StudentAttendanceModel();
+                                studentAttendanceModel.setSubject(nameOfSubject.get(i));
+                                float percentage;
+                                if( totalCount.get(i) == 0)
+                                    percentage = 0;
+                                else
+                                    percentage = attendedCount.get(i)/totalCount.get(i);
+                                percentage = percentage*100;
+
+                                studentAttendanceModel.setPercent(Float.toString(percentage));
+                                studentAttendanceModels.add(studentAttendanceModel);
+                            }
+
+                            studentAttendanceAdapter = new StudentAttendanceAdapter(mContext, studentAttendanceModels);
+                            mRecyclerView.setAdapter(studentAttendanceAdapter);
+                        }
+                    });
+
+                }
             }
         });
-
-        for(SubjectInStudentModel subject : subjects)
-        {
-            int subjectId = subject.getId();
-            attendedCount.add(subject.getDates().size());
-            subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                    SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
-                    totalCount.add(subjectModel.getDates().size());
-                    nameOfSubject.add(subjectModel.getName());
-                }
-            });
-
-        }
-
-        ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
-        for(int i=0;i<attendedCount.size();i++)
-        {
-            StudentAttendanceModel studentAttendanceModel = new StudentAttendanceModel();
-            studentAttendanceModel.setSubject(nameOfSubject.get(i));
-            float percentage = attendedCount.get(i)/totalCount.get(i);
-            percentage = percentage*100;
-
-            studentAttendanceModel.setPercent(Float.toString(percentage));
-            studentAttendanceModels.add(studentAttendanceModel);
-        }
-
-        return studentAttendanceModels;
     }
 
     @Override
