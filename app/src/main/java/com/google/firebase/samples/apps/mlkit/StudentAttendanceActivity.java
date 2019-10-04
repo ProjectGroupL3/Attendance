@@ -140,7 +140,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                                 percentage = (float)attendedCount.get(iterator)/totalCount.get(iterator);
                             percentage = percentage*100;
 
-                            studentAttendanceModel.setPercent(Float.toString(percentage));
+                            studentAttendanceModel.setPercent(Float.toString(percentage)+"%");
                             studentAttendanceModels.add(studentAttendanceModel);
                             Log.i("subjectarraylist",studentAttendanceModel.getSubject());
                             Log.i("subjectarraylist",studentAttendanceModel.getPercent());
