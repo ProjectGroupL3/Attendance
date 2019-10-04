@@ -26,34 +26,34 @@ public class UpdateAttendance {
     private CollectionReference subjectCollection = db.collection("subjectCollection");
     private CollectionReference studentCollection = db.collection("studentCollection");
     private int subjectId;
-    public UpdateAttendance(Context context)
-    {
+
+    public UpdateAttendance(Context context,int subjectId) {
         mContext = context;
         sharedPref = new SharedPref(mContext);
+        this.subjectId = subjectId;
 
     }
-    public void updateAttendanceOfSubject(int subjectId) {
-        Log.i("subjectdate ", "currentDate");
 
-        subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+    public void updateAttendanceOfSubject() {
+
+        subjectCollection.whereEqualTo("id", subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                {
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
 
                     ArrayList<String> dates;
                     SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
                     try {
                         dates = new ArrayList<>(subjectModel.getDates());
-                    }
-                    catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         dates = new ArrayList<>();
                     }
 
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                     String currentDate = sdf.format(new Date());
                     dates.add(currentDate);
-                    Log.i("subjectdate ",dates.toString() + subjectModel.getName());
+                    Log.i("subjectdate ", dates.toString() + subjectModel.getName());
                     subjectModel.setDates(dates);
                     subjectCollection.document(documentSnapshot.getId()).set(subjectModel, SetOptions.merge());
                 }
@@ -62,48 +62,51 @@ public class UpdateAttendance {
 
     }
 
-//    public void updateAttendanceOfStudent(String studentId) {
-//
-//
-//        studentCollection.whereEqualTo("id",studentId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-//                {
-//                    int index;
-//                    ArrayList<String> dates;
-//
-//                    StudentModel student = documentSnapshot.toObject(StudentModel.class);
-//                    ArrayList<SubjectInStudentModel> subjects = student.getSubjects();
-//                    findIndex(subjects);
-//                    try {
-//                        dates = new ArrayList<>(student.getDates());
-//                    }
-//                    catch (NullPointerException e){
-//                        dates = new ArrayList<>();
-//                    }
-//
-//                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//                    String currentDate = sdf.format(new Date());
-//                    dates.add(currentDate);
-//                    Log.i("subjectdate ",dates.toString() + subjectModel.getName());
-//                    subjectModel.setDates(dates);
-//                    subjectCollection.document(documentSnapshot.getId()).set(subjectModel, SetOptions.merge());
-//                }
-//            }
-//        });
-//
-//    }
-//    int findIndex(ArrayList<SubjectInStudentModel> subjects)
-//    {
-//        int index;
-//        for(SubjectInStudentModel subject:subjects)
-//        {
-//            if(subject.getId()==subjectId)
-//            {
-//                return
-//            }
-//        }
-//    }
+    public void updateAttendanceOfStudent(String studentId) {
+
+
+        studentCollection.whereEqualTo("id", studentId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                StudentModel student = documentSnapshot.toObject(StudentModel.class);
+
+                ArrayList<String> dates;
+                ArrayList<SubjectInStudentModel> subjects = student.getSubjects();
+                int index = findIndex(subjects);
+                SubjectInStudentModel subject = subjects.get(index);
+                try {
+                    dates = new ArrayList<>(subject.getDates());
+                } catch (NullPointerException e) {
+                    dates = new ArrayList<>();
+                }
+
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                String currentDate = sdf.format(new Date());
+                dates.add(currentDate);
+
+                subject.setDates(dates);
+                subjects.set(index,subject);
+                student.setSubjects(subjects);
+                studentCollection.document(documentSnapshot.getId()).set(student, SetOptions.merge());
+            }
+
+        });
+
+
+    }
+    private int findIndex(ArrayList<SubjectInStudentModel> subjects)
+    {
+        int index=0;
+        for(SubjectInStudentModel subject:subjects)
+        {
+            if(subject.getId()==subjectId)
+            {
+                return index;
+            }
+            index++;
+        }
+        return index;
+    }
 
 }

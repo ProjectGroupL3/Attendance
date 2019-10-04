@@ -1,10 +1,14 @@
 package com.google.firebase.samples.apps.mlkit;
 
+import android.content.ContentProvider;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -13,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -24,7 +29,8 @@ import android.view.Menu;
 public class TeacherAttendanceActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
+    SharedPref sharedPref;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,8 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
-
+        mContext = this;
+        sharedPref = new SharedPref(mContext);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -60,6 +67,27 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.action_logout:
+            {
+                sharedPref.logout();
+                sharedPref.setIsLoggedIn(false);
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                finishAffinity();
+                startActivity(intent);
+                finish();
+            }
+            case R.id.action_settings: break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

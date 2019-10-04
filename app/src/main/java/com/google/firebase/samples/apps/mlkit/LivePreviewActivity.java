@@ -102,6 +102,7 @@ public final class LivePreviewActivity extends AppCompatActivity
 
     if (allPermissionsGranted()) {
       createCameraSource(selectedModel);
+      Log.i(TAG,"all permissions granted");
     } else {
       getRuntimePermissions();
     }

@@ -55,7 +55,7 @@ public class OTPActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
         mContext = OTPActivity.this;
-        btnVerify = findViewById(R.id.btn_logout);
+        btnVerify = findViewById(R.id.btn_verify);
         mEtOtp1 = findViewById(R.id.otp_edit_text1);
         mEtOtp2 = findViewById(R.id.otp_edit_text2);
         mEtOtp3 = findViewById(R.id.otp_edit_text3);
