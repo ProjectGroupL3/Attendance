@@ -4,7 +4,7 @@ public class StudentAttendanceModel {
 
     public String subject;
     public String percent;
-
+/*
     public String getType() {
         return type;
     }
@@ -13,7 +13,7 @@ public class StudentAttendanceModel {
         this.type = type;
     }
 
-    public String type;
+    public String type;*/
 
     public String getSubject() {
         return subject;

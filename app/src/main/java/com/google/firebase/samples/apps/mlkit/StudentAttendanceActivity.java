@@ -19,10 +19,16 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.adapters.StudentAttendanceAdapter;
 import com.google.firebase.samples.apps.mlkit.models.StudentAttendanceModel;
+import com.google.firebase.samples.apps.mlkit.models.StudentModel;
+import com.google.firebase.samples.apps.mlkit.models.SubjectInStudentModel;
+import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.util.ArrayList;
@@ -31,13 +37,19 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference studentCollection = db.collection("studentCollection");
+    private CollectionReference subjectCollection = db.collection("subjectCollection");
+
     private RecyclerView mRecyclerView;
     private StudentAttendanceAdapter studentAttendanceAdapter;
     private TextView studentNameTextView;
     private String studentName;
     private SharedPref sharedPref;
     private Context mContext;
-
+    private String studentId;
+    private ArrayList<Integer> attendedCount = new ArrayList<>();
+    private ArrayList<Integer> totalCount = new ArrayList<>();
+    private ArrayList<String> nameOfSubject = new ArrayList<>();
+    private ArrayList<SubjectInStudentModel> subjects = new ArrayList<>();
     CardView profileCard;
 
 
@@ -49,9 +61,11 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("StudentModel Attendance");
         mContext = this;
         studentNameTextView = (TextView) findViewById(R.id.textView2);
+
         sharedPref=new SharedPref(mContext);
 
         studentName = sharedPref.getNAME();
+        studentId = sharedPref.getID();
         studentNameTextView = findViewById(R.id.tv_student_name);
         studentNameTextView.setText(studentName);
 
@@ -74,61 +88,43 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
     public ArrayList<StudentAttendanceModel> getMyList() {
 
+        studentCollection.whereEqualTo("id",studentId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                StudentModel student = documentSnapshot.toObject(StudentModel.class);
+                subjects = student.getSubjects();
+
+            }
+        });
+
+        for(SubjectInStudentModel subject : subjects)
+        {
+            int subjectId = subject.getId();
+            attendedCount.add(subject.getDates().size());
+            subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                    SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
+                    totalCount.add(subjectModel.getDates().size());
+                    nameOfSubject.add(subjectModel.getName());
+                }
+            });
+
+        }
+
         ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
-        StudentAttendanceModel m =new StudentAttendanceModel();
+        for(int i=0;i<attendedCount.size();i++)
+        {
+            StudentAttendanceModel studentAttendanceModel = new StudentAttendanceModel();
+            studentAttendanceModel.setSubject(nameOfSubject.get(i));
+            float percentage = attendedCount.get(i)/totalCount.get(i);
+            percentage = percentage*100;
 
-        m.setSubject("Ce Cnl Pr");
-        m.setType("Practical");
-        m.setPercent("83.33%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Computer Networks Th");
-        m.setType("Lecture");
-        m.setPercent("86.79%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Database Management Systems Th");
-        m.setType("Lecture");
-        m.setPercent("82.86%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Dbmsl Pr");
-        m.setType("Practical");
-        m.setPercent("85.0%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Information Systems And Engineering Economics Th");
-        m.setType("Lecture");
-        m.setPercent("87.88%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Skills Development Lab Pr");
-        m.setType("Practical");
-        m.setPercent("91.3%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Skills Development Lab Pr");
-        m.setType("Practical");
-        m.setPercent("76.67%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Software Engineering & Project Management Th");
-        m.setType("Lecture");
-        m.setPercent("69.23%");
-        studentAttendanceModels.add(m);
-
-        m =new StudentAttendanceModel();
-        m.setSubject("Ce Theory of Computation");
-        m.setType("Lecture");
-        m.setPercent("82.93%");
-        studentAttendanceModels.add(m);
+            studentAttendanceModel.setPercent(Float.toString(percentage));
+            studentAttendanceModels.add(studentAttendanceModel);
+        }
 
         return studentAttendanceModels;
     }
@@ -156,6 +152,13 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                 return true;
 
             case R.id.logout:
+
+                sharedPref.logout();
+                sharedPref.setIsLoggedIn(false);
+                Intent intent = new Intent(StudentAttendanceActivity.this, LoginActivity.class);
+                finishAffinity();
+                startActivity(intent);
+                finish();
 
                 return true;
 

@@ -138,62 +138,9 @@ public class ProfileActivity extends AppCompatActivity {
 
             } catch (FileNotFoundException e) {
 
-
                 e.printStackTrace();
+
             }
-
         }
-
     }
-
-    /*private String getFileExtension(Uri uri) {
-
-        ContentResolver contentResolver = getBaseContext().getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-
-    }
-
-    private void uploadImage() {
-
-        final ProgressDialog pd = new ProgressDialog(getBaseContext());
-        pd.setMessage("Uploading");
-        pd.show();
-
-        if (imageUri != null) {
-
-            final StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
-
-            uploadTask = fileReference.getFile(imageUri);
-            uploadTask.continueWith(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-
-                    if (!task.isSuccessful()) {
-
-                        throw task.getException();
-
-                    }
-
-                    return fileReference.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-
-                    if (task.isSuccessful()) {
-
-                        Uri downloadUri = task.getResult();
-                        String mUri = downloadUri.toString();
-
-                        reference = FirebaseDatabase.getInstance().getReference("Users").child
-
-                    }
-
-                }
-            })
-
-        }*/
-
-
 }
