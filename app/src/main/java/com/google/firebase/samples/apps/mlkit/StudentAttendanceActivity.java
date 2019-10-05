@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import android.view.View;
@@ -35,6 +36,8 @@ import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 import java.util.ArrayList;
 
 public class StudentAttendanceActivity extends AppCompatActivity {
+
+    ProgressBar progressBar3;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference studentCollection = db.collection("studentCollection");
@@ -63,7 +66,10 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studence_attendance);
 
-        getSupportActionBar().setTitle("StudentModel Attendance");
+        getSupportActionBar().setTitle("Student Attendance");
+
+        progressBar3 = findViewById(R.id.progressBar3);
+        progressBar3.setVisibility(View.VISIBLE);
 //        Log.i("subject activity",getApplicationContext().getApplicationInfo().toString());
         mContext = this;
         studentNameTextView = (TextView) findViewById(R.id.textView2);
@@ -107,6 +113,8 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                     model.setAttendedCount(subject.getDates().size());
                     studentAttendanceModels.add(model);
                 }
+                                progressBar3.setVisibility(View.GONE);
+
                 for( final int id : subjectIds )
                 {
                     subjectCollection.whereEqualTo("id",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -131,48 +139,19 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                                 test.setTotalCount(subjectModel.getDates().size());
                             else
                                 test.setTotalCount(0);
-                            //test.setType(subjectModel.getDiv()); @ToDo set type
+                            //test.setType(subjectModel.getDiv());
                             if(test.getTotalCount()==0)
                             {
                                 test.setPercent("0");
                             }
                             else
                             {
-                                test.setPercent(String.valueOf(100*(test.getAttendedCount()/(float)test.getTotalCount())));
+                                float percentage  = (float)test.getAttendedCount()/test.getTotalCount();
+                                percentage = percentage*100;
+                                test.setPercent(String.format("%.2f", percentage));
                             }
 
 
-//                            if(subjectModel.getDates() == null)
-//                            {
-//                                totalCount.add(0);
-//                            }
-//                            else
-//                            {
-//                                totalCount.add(subjectModel.getDates().size());
-//                            }
-//                            nameOfSubject.add(subjectModel.getName());
-//                            Log.i("subjectnames",nameOfSubject.toString());
-//                            Log.i("subjecttotal",totalCount.toString());
-//
-//                            StudentAttendanceModel studentAttendanceModel = new StudentAttendanceModel();
-//                            studentAttendanceModel.setSubject(nameOfSubject.get(nameOfSubject.size()-1));
-//                            float percentage;
-//                            Log.i("subjectattended",attendedCount.get(iterator).toString());
-//                            Log.i("subjecttotal",totalCount.get(totalCount.size()-1).toString());
-//                            if(totalCount.get(iterator)==0)
-//                            {
-//                                percentage = 0;
-//                            }
-//                            else
-//                                percentage = (float)attendedCount.get(iterator)/totalCount.get(totalCount.size()-1);
-//                            percentage = percentage*100;
-//
-//                            studentAttendanceModel.setPercent(Float.toString(percentage)+"%");
-//                            studentAttendanceModels.add(studentAttendanceModel);
-//                            Log.i("subjectarraylist",studentAttendanceModel.getSubject());
-//                            Log.i("subjectarraylist",studentAttendanceModel.getPercent());
-//                            Log.i("subjectiterator",Integer.valueOf(iterator).toString());
-//                            iterator++;
 
                             studentAttendanceAdapter = new StudentAttendanceAdapter(mContext,studentAttendanceModels);
                             mRecyclerView.setAdapter(studentAttendanceAdapter);
