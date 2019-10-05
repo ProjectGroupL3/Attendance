@@ -8,6 +8,7 @@ public class SubjectModel {
     String div;
     int teacherId;
     ArrayList<String> dates=new ArrayList<>();
+    String type;
     public SubjectModel()
     {
 
@@ -30,13 +31,14 @@ public class SubjectModel {
         return teacherId;
     }
 
-    public SubjectModel(String name, int id, String div, ArrayList<String> dates, int teacherId)
+    public SubjectModel(String name, int id, String div, ArrayList<String> dates, int teacherId,String type)
     {
         this.name=name;
         this.id=id;
         this.div=div;
         this.dates=dates;
         this.teacherId=teacherId;
+        this.type = type;
 
     }
     public SubjectModel(int id)
@@ -52,4 +54,27 @@ public class SubjectModel {
         return dates;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDiv(String div) {
+        this.div = div;
+    }
+
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

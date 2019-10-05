@@ -21,6 +21,7 @@ public class AttendanceActivity extends AppCompatActivity {
     private Button markAttendanceButton;
     private UpdateAttendance updateAttendance;
     private ArrayList<String> presentStudentIds;
+    private CreateDatabase createDatabase;
     private int subjectId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +53,14 @@ public class AttendanceActivity extends AppCompatActivity {
 
         presentStudentIds = new ArrayList<>(Arrays.asList("c2k17105589","c2k17105590"));
         subjectId = 1;
-        updateAttendance = new UpdateAttendance(mContext,subjectId);
+/*        updateAttendance = new UpdateAttendance(mContext,subjectId);
         updateAttendance.updateAttendanceOfSubject();
         for(String id : presentStudentIds)
         {
             updateAttendance.updateAttendanceOfStudent(id);
         }
+        createDatabase = new CreateDatabase();
+        createDatabase.addSubjects();*/
+
     }
 }

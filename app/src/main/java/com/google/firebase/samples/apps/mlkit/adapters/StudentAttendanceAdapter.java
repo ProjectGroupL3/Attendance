@@ -38,7 +38,7 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
     public void onBindViewHolder(@NonNull MyHolder myHolder, int i) {
 
         myHolder.subjectName.setText(studentAttendanceModels.get(i).getSubject());
-        myHolder.percent.setText(studentAttendanceModels.get(i).getPercent());
+        myHolder.percent.setText(studentAttendanceModels.get(i).getPercent() + " %");
         myHolder.subjectType.setText(studentAttendanceModels.get(i).getType());
     }
 

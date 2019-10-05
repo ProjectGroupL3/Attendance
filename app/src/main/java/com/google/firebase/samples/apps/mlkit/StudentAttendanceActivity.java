@@ -47,12 +47,13 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private SharedPref sharedPref;
     private Context mContext;
     private String studentId;
-    private ArrayList<Integer> attendedCount = new ArrayList<>();
-    private ArrayList<Integer> totalCount=new ArrayList<>();
-    private ArrayList<String> nameOfSubject=new ArrayList<>();
-    private ArrayList<SubjectInStudentModel> subjects = new ArrayList<>();
+//    private ArrayList<Integer> attendedCount = new ArrayList<>();
+//    private ArrayList<Integer> totalCount=new ArrayList<>();
+//    private ArrayList<String> nameOfSubject=new ArrayList<>();
+//    private ArrayList<SubjectInStudentModel> subjects = new ArrayList<>();
+    private ArrayList<Integer> subjectIds = new ArrayList<>();
     private ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
-    private int iterator = 0;
+    private int iterator=0;
 
     CardView profileCard;
 
@@ -89,9 +90,6 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         getMyList();
         Log.i("subjectarraylist",studentAttendanceModels.toString());
 
-
-
-
     }
 
     public void getMyList() {
@@ -101,61 +99,86 @@ public class StudentAttendanceActivity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                 StudentModel student = documentSnapshot.toObject(StudentModel.class);
-                subjects = student.getSubjects();
-
-                for(SubjectInStudentModel subject : subjects)
+                for(SubjectInStudentModel subject : student.getSubjects())
                 {
-                    int subjectId=subject.getId();
-                    attendedCount.add(subject.getDates().size());
-                    subjectCollection.whereEqualTo("id",subjectId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    subjectIds.add(subject.getId());
+                    StudentAttendanceModel model = new StudentAttendanceModel();
+                    model.setSubjectId(subject.getId());
+                    model.setAttendedCount(subject.getDates().size());
+                    studentAttendanceModels.add(model);
+                }
+                for( final int id : subjectIds )
+                {
+                    subjectCollection.whereEqualTo("id",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                             SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
-                            if(subjectModel.getDates() == null)
+
+                            StudentAttendanceModel test = new StudentAttendanceModel();
+
+                            for ( StudentAttendanceModel temp : studentAttendanceModels )
                             {
+                                if(temp.getSubjectId() == subjectModel.getId())
+                                {
+                                    test = temp;
+                                    break;
+                                }
+                            }
 
-                                totalCount.add(0);
-
+                            test.setSubject(subjectModel.getName());
+                            if(subjectModel.getDates() != null)
+                                test.setTotalCount(subjectModel.getDates().size());
+                            else
+                                test.setTotalCount(0);
+                            //test.setType(subjectModel.getDiv()); @ToDo set type
+                            if(test.getTotalCount()==0)
+                            {
+                                test.setPercent("0");
                             }
                             else
                             {
-                                totalCount.add(subjectModel.getDates().size());
-
+                                test.setPercent(String.valueOf(100*(test.getAttendedCount()/(float)test.getTotalCount())));
                             }
 
 
-                            nameOfSubject.add(subjectModel.getName());
+//                            if(subjectModel.getDates() == null)
+//                            {
+//                                totalCount.add(0);
+//                            }
+//                            else
+//                            {
+//                                totalCount.add(subjectModel.getDates().size());
+//                            }
+//                            nameOfSubject.add(subjectModel.getName());
+//                            Log.i("subjectnames",nameOfSubject.toString());
+//                            Log.i("subjecttotal",totalCount.toString());
+//
+//                            StudentAttendanceModel studentAttendanceModel = new StudentAttendanceModel();
+//                            studentAttendanceModel.setSubject(nameOfSubject.get(nameOfSubject.size()-1));
+//                            float percentage;
+//                            Log.i("subjectattended",attendedCount.get(iterator).toString());
+//                            Log.i("subjecttotal",totalCount.get(totalCount.size()-1).toString());
+//                            if(totalCount.get(iterator)==0)
+//                            {
+//                                percentage = 0;
+//                            }
+//                            else
+//                                percentage = (float)attendedCount.get(iterator)/totalCount.get(totalCount.size()-1);
+//                            percentage = percentage*100;
+//
+//                            studentAttendanceModel.setPercent(Float.toString(percentage)+"%");
+//                            studentAttendanceModels.add(studentAttendanceModel);
+//                            Log.i("subjectarraylist",studentAttendanceModel.getSubject());
+//                            Log.i("subjectarraylist",studentAttendanceModel.getPercent());
+//                            Log.i("subjectiterator",Integer.valueOf(iterator).toString());
+//                            iterator++;
 
-                            StudentAttendanceModel studentAttendanceModel = new StudentAttendanceModel();
-                            studentAttendanceModel.setSubject(nameOfSubject.get(iterator));
-                            float percentage;
-                            Log.i("subjectattended",attendedCount.get(iterator).toString());
-                            Log.i("subjecttotal",totalCount.get(iterator).toString());
-                            if(totalCount.get(iterator)==0)
-                            {
-                                percentage = 0;
-                            }
-                            else
-                                percentage = (float)attendedCount.get(iterator)/totalCount.get(iterator);
-                            percentage = percentage*100;
-
-                            studentAttendanceModel.setPercent(Float.toString(percentage)+"%");
-                            studentAttendanceModels.add(studentAttendanceModel);
-                            Log.i("subjectarraylist",studentAttendanceModel.getSubject());
-                            Log.i("subjectarraylist",studentAttendanceModel.getPercent());
-                            iterator++;
                             studentAttendanceAdapter = new StudentAttendanceAdapter(mContext,studentAttendanceModels);
                             mRecyclerView.setAdapter(studentAttendanceAdapter);
-
                         }
                     });
-
                 }
-
-                Log.i("subjectAttendedCount", attendedCount.toString());
-
-
             }
         });
 

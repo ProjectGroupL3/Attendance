@@ -83,25 +83,25 @@ public class CreateDatabase {
     }
 
     public void addSubjects() {
-   /*                     subjectModels.add(new SubjectModel("dbms",1,"TE1",null,3));
-        subjectModels.add(new SubjectModel("dbms",2,"TE2",null,1));
-        subjectModels.add(new SubjectModel("dbms",3,"TE3",null,1));
-        subjectModels.add(new SubjectModel("cn",4,"TE1",null,2));
-        subjectModels.add(new SubjectModel("cn",5,"TE2",null,2));
-        subjectModels.add(new SubjectModel("cn",6,"TE3",null,4));
-        subjectModels.add(new SubjectModel("sdl",7,"TE1",null,5));
-        subjectModels.add(new SubjectModel("sdl",8,"TE2",null,4));
-        subjectModels.add(new SubjectModel("sdl",9,"TE3",null,5));
-        subjectModels.add(new SubjectModel("toc",10,"TE1",null,5));
-        subjectModels.add(new SubjectModel("toc",11,"TE2",null,6));
-        subjectModels.add(new SubjectModel("toc",12,"TE3",null,6));
-        subjectModels.add(new SubjectModel("sepm",13,"TE1",null,8));
-        subjectModels.add(new SubjectModel("sepm",14,"TE2",null,9));
-        subjectModels.add(new SubjectModel("sepm",15,"TE3",null,9));
+                        subjectModels.add(new SubjectModel("dbms",1,"TE1",null,3,"practical"));
+        subjectModels.add(new SubjectModel("dbms",2,"TE2",null,1,"lecture"));
+        subjectModels.add(new SubjectModel("dbms",3,"TE3",null,1,"lecture"));
+        subjectModels.add(new SubjectModel("cn",4,"TE1",null,2,"lecture"));
+        subjectModels.add(new SubjectModel("cn",5,"TE2",null,2,"practical"));
+        subjectModels.add(new SubjectModel("cn",6,"TE3",null,4,"lecture"));
+        subjectModels.add(new SubjectModel("sdl",7,"TE1",null,5,"lecture"));
+        subjectModels.add(new SubjectModel("sdl",8,"TE2",null,4,"lecture"));
+        subjectModels.add(new SubjectModel("sdl",9,"TE3",null,5,"practical"));
+        subjectModels.add(new SubjectModel("toc",10,"TE1",null,5,"lecture"));
+        subjectModels.add(new SubjectModel("toc",11,"TE2",null,6,"lecture"));
+        subjectModels.add(new SubjectModel("toc",12,"TE3",null,6,"practical"));
+        subjectModels.add(new SubjectModel("sepm",13,"TE1",null,8,"lecture"));
+        subjectModels.add(new SubjectModel("sepm",14,"TE2",null,9,"lecture"));
+        subjectModels.add(new SubjectModel("sepm",15,"TE3",null,9,"practical"));
         for(int i=0;i<subjectModels.size();i++) {
-            String docId = "SubjectModel" + (i + 1);
-            subjectCollection.document(docId).update("teacherId",subjectModels.get(i).getTeacherId());
-        }*/
+            String docId = "Subject" + (i + 1);
+            subjectCollection.document(docId).update("Type",subjectModels.get(i).getType());
+        }
 
     }
 
