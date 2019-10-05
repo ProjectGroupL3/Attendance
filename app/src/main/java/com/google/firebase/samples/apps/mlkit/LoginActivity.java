@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     EditText mEtMobNo;
     TextView textView;
+    ProgressBar progressBar;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference teacherCollection = db.collection("teacherCollection");
     CollectionReference studentCollection = db.collection("studentCollection");
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mContext = getApplicationContext();
         sharedPref = new SharedPref(mContext);
+        progressBar = findViewById(R.id.progressBar);
         if(sharedPref.isLoggedIn())
         {
             if(sharedPref.isStudent())
@@ -85,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             phoneNumber = mEtMobNo.getText().toString();
                             validateUserLogin();
+                            progressBar.setVisibility(View.VISIBLE);
                         }
 
                         return true;
@@ -109,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                     studentId = student.getId();
                     division = student.getDiv();
                     sharedPref=new SharedPref(mContext, studentId,name,phoneNumber,division,isStudent);
+                    progressBar.setVisibility(View.GONE);
                     Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
                     intent.putExtra("phoneNumber",phoneNumber);
                     startActivity(intent);
@@ -127,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                                 teacherId = teacher.getId();
                                 sharedPref=new SharedPref(mContext, String.valueOf(teacherId),name,phoneNumber,"",isStudent);
                                 phoneNumber="+91"+phoneNumber;
+                                progressBar.setVisibility(View.GONE);
                                 Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
                                 intent.putExtra("phoneNumber", phoneNumber);
                                 intent.putExtra("isStudent",isStudent);
