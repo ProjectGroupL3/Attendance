@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import android.view.View;
@@ -36,6 +37,8 @@ import java.util.ArrayList;
 
 public class StudentAttendanceActivity extends AppCompatActivity {
 
+    ProgressBar progressBar3;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference studentCollection = db.collection("studentCollection");
     private CollectionReference subjectCollection = db.collection("subjectCollection");
@@ -62,7 +65,10 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studence_attendance);
 
-        getSupportActionBar().setTitle("StudentModel Attendance");
+        getSupportActionBar().setTitle("Student Attendance");
+
+        progressBar3 = findViewById(R.id.progressBar3);
+        progressBar3.setVisibility(View.VISIBLE);
 //        Log.i("subject activity",getApplicationContext().getApplicationInfo().toString());
         mContext = this;
         studentNameTextView = (TextView) findViewById(R.id.textView2);
@@ -101,6 +107,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                 StudentModel student = documentSnapshot.toObject(StudentModel.class);
+                progressBar3.setVisibility(View.GONE);
                 subjects = student.getSubjects();
 
                 for(SubjectInStudentModel subject : subjects)
