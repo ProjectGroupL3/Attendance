@@ -134,13 +134,14 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                     } else {
                         int prev_count = singleFaceDetectCount.get(id);
                         prev_count++;
-                        if( prev_count < 1 )
+                        singleFaceDetectCount.put(id,prev_count);
+                        if( prev_count <= 1 )
                         {
                             singleFaceDetectCount.put(id,prev_count);
                             ImageView img = integerImageViewHashMap.get(id);
                             img.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
                         }
-                        else if( prev_count == 1 )
+                        else if( prev_count == 2 )
                         {
                             layout.removeView(integerImageViewHashMap.get(id));
                             layout.addView(integerImageViewHashMap.get(id));
