@@ -23,7 +23,7 @@
         <activity android:name=".OTPActivity"
             android:theme="@style/activity_custom"/>
         <activity android:name=".LoginActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/activity_custom">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

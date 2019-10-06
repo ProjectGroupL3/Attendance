@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             if (queryDocumentSnapshots.isEmpty()) {
                                 alertDialog.dismiss();
-                                Toast.makeText(mContext, "Enter valid phone number !!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "No Such User", Toast.LENGTH_SHORT).show();
                             } else{
                                 isStudent=false;
                                 DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
