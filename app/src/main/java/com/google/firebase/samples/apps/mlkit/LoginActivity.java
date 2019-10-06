@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
 import com.google.firebase.samples.apps.mlkit.models.TeacherModel;
+import com.google.firebase.samples.apps.mlkit.others.CustomAlertDialog;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 
@@ -31,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     EditText mEtMobNo;
     TextView textView;
-    ProgressBar progressBar;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference teacherCollection = db.collection("teacherCollection");
     CollectionReference studentCollection = db.collection("studentCollection");
@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private String studentId;
     private int teacherId;
     private SharedPref sharedPref;
+    private CustomAlertDialog alertDialog;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mContext = getApplicationContext();
         sharedPref = new SharedPref(mContext);
-        progressBar = findViewById(R.id.progressBar);
+        alertDialog = new CustomAlertDialog(LoginActivity.this);
+        alertDialog.setTextViewText("Logging In");
         if(sharedPref.isLoggedIn())
         {
             if(sharedPref.isStudent())
@@ -88,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             phoneNumber = mEtMobNo.getText().toString();
                             validateUserLogin();
-                            progressBar.setVisibility(View.VISIBLE);
+                            alertDialog.show();
                         }
 
                         return true;
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                     studentId = student.getId();
                     division = student.getDiv();
                     sharedPref=new SharedPref(mContext, studentId,name,phoneNumber,division,isStudent);
-                    progressBar.setVisibility(View.GONE);
+                    alertDialog.dismiss();
                     Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
                     intent.putExtra("phoneNumber",phoneNumber);
                     startActivity(intent);
@@ -123,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             if (queryDocumentSnapshots.isEmpty()) {
+                                alertDialog.dismiss();
                                 Toast.makeText(mContext, "Enter valid phone number !!", Toast.LENGTH_SHORT).show();
                             } else{
                                 isStudent=false;
@@ -132,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                                 teacherId = teacher.getId();
                                 sharedPref=new SharedPref(mContext, String.valueOf(teacherId),name,phoneNumber,"",isStudent);
                                 phoneNumber="+91"+phoneNumber;
-                                progressBar.setVisibility(View.GONE);
+                                alertDialog.dismiss();
                                 Intent intent = new Intent(LoginActivity.this, OTPActivity.class);
                                 intent.putExtra("phoneNumber", phoneNumber);
                                 intent.putExtra("isStudent",isStudent);
