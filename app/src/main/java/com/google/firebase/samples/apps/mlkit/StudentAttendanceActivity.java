@@ -57,6 +57,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private Context mContext;
     private String studentId;
     private float studentAvgPercent;
+    private float studentAverageTotal;
 //    private ArrayList<Integer> attendedCount = new ArrayList<>();
 //    private ArrayList<Integer> totalCount=new ArrayList<>();
 //    private ArrayList<String> nameOfSubject=new ArrayList<>();
@@ -64,6 +65,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private ArrayList<Integer> subjectIds = new ArrayList<>();
     private ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
     private int iterator=0;
+    private int subjectsWithAttendanceCount = 0;
     private ScrollView constraintLayout;
     CardView profileCard;
 
@@ -118,7 +120,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         studentCollection.whereEqualTo("id",studentId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                studentAvgPercent = 0;
+                studentAverageTotal = 0;
                 studentAttendanceModels.clear();
                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                 StudentModel student = documentSnapshot.toObject(StudentModel.class);
@@ -127,7 +129,10 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                     subjectIds.add(subject.getId());
                     StudentAttendanceModel model = new StudentAttendanceModel();
                     model.setSubjectId(subject.getId());
-                    model.setAttendedCount(subject.getDates().size());
+                    if(subject.getDates() != null)
+                        model.setAttendedCount(subject.getDates().size());
+                    else
+                        model.setAttendedCount(0);
                     studentAttendanceModels.add(model);
                 }
                 Log.d(TAG, "onSuccess: " + subjectIds);
@@ -136,6 +141,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                     subjectCollection.whereEqualTo("id",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            studentAvgPercent = 0;
                             Log.d(TAG, "onSuccess: id:" + id);
                             DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                             Log.d(TAG, "onSuccess: size" + queryDocumentSnapshots.getDocuments().size());
@@ -157,7 +163,10 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                             if(subjectModel.getDates() != null)
                                 test.setTotalCount(subjectModel.getDates().size());
                             else
+                            {
                                 test.setTotalCount(0);
+                                subjectsWithAttendanceCount++;
+                            }
                             //test.setType(subjectModel.getDiv());
                             if(test.getTotalCount()==0)
                             {
@@ -168,15 +177,16 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                                 float percentage  = (float)test.getAttendedCount()/test.getTotalCount();
                                 percentage = percentage*100;
                                 test.setPercent(String.format("%.2f", percentage));
-                                studentAvgPercent = studentAvgPercent + percentage ;
+                                studentAverageTotal = studentAverageTotal + percentage ;
                             }
-
+                            Log.d(TAG, "onSuccess: size of models" + studentAttendanceModels.size());
                             studentAttendanceAdapter = new StudentAttendanceAdapter(mContext,studentAttendanceModels);
                             mRecyclerView.setAdapter(studentAttendanceAdapter);
                             if(customAlertDialog.isShowing())
                                 customAlertDialog.dismiss();
                             constraintLayout.setVisibility(View.VISIBLE);
                             swipeRefreshLayout.setRefreshing(false);
+                            studentAvgPercent = studentAverageTotal /(float)(subjectIds.size() - subjectsWithAttendanceCount );
                             mTvPercent.setText(String.format("%.2f", studentAvgPercent) + " %");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -187,7 +197,6 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                         }
                     });
                 }
-                studentAvgPercent /= subjectIds.size();
             }
         });
 
