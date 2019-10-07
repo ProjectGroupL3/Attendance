@@ -2,7 +2,6 @@ package com.google.firebase.samples.apps.mlkit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,7 +77,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         profileCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StudentAttendanceActivity.this,ProfileActivity.class));
+                startActivity(new Intent(StudentAttendanceActivity.this, StudentProfileActivity.class));
             }
         });
 
@@ -152,7 +151,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
             case R.id.myprofile :
 
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                startActivity(new Intent(getApplicationContext(), StudentProfileActivity.class));
 
                 return true;
 

@@ -83,7 +83,10 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
 
             case R.id.action_profile:
 
-                Toast.makeText(TeacherAttendanceActivity.this, "Profile clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(TeacherAttendanceActivity.this, TeacherProfileActivity.class);
+                finishAffinity();
+                startActivity(intent);
+                finish();
 
                 return true;
 
@@ -91,9 +94,9 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
 
                 sharedPref.logout();
                 sharedPref.setIsLoggedIn(false);
-                Intent intent = new Intent(TeacherAttendanceActivity.this, LoginActivity.class);
+                Intent intent1 = new Intent(TeacherAttendanceActivity.this, LoginActivity.class);
                 finishAffinity();
-                startActivity(intent);
+                startActivity(intent1);
                 finish();
 
                 return true;
