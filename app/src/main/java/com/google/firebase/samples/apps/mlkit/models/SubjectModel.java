@@ -8,7 +8,7 @@ public class SubjectModel {
     String div;
     int teacherId;
     ArrayList<String> dates=new ArrayList<>();
-    String type;
+    String Type;
     public SubjectModel()
     {
 
@@ -38,7 +38,7 @@ public class SubjectModel {
         this.div=div;
         this.dates=dates;
         this.teacherId=teacherId;
-        this.type = type;
+        this.Type = type;
 
     }
     public SubjectModel(int id)
@@ -71,10 +71,10 @@ public class SubjectModel {
     }
 
     public String getType() {
-        return type;
+        return Type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.Type = type;
     }
 }

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import android.view.View;
@@ -18,9 +19,12 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,25 +35,28 @@ import com.google.firebase.samples.apps.mlkit.models.StudentAttendanceModel;
 import com.google.firebase.samples.apps.mlkit.models.StudentModel;
 import com.google.firebase.samples.apps.mlkit.models.SubjectInStudentModel;
 import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
+import com.google.firebase.samples.apps.mlkit.others.CustomAlertDialog;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.util.ArrayList;
 
 public class StudentAttendanceActivity extends AppCompatActivity {
 
-    ProgressBar progressBar3;
-
+    CustomAlertDialog customAlertDialog;
+    SwipeRefreshLayout swipeRefreshLayout;
+    private static final String TAG = "StudentAttendanceActivi";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference studentCollection = db.collection("studentCollection");
     private CollectionReference subjectCollection = db.collection("subjectCollection");
-
     private RecyclerView mRecyclerView;
     private StudentAttendanceAdapter studentAttendanceAdapter;
     private TextView studentNameTextView;
+    private TextView mTvPercent;
     private String studentName;
     private SharedPref sharedPref;
     private Context mContext;
     private String studentId;
+    private float studentAvgPercent;
 //    private ArrayList<Integer> attendedCount = new ArrayList<>();
 //    private ArrayList<Integer> totalCount=new ArrayList<>();
 //    private ArrayList<String> nameOfSubject=new ArrayList<>();
@@ -57,7 +64,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private ArrayList<Integer> subjectIds = new ArrayList<>();
     private ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
     private int iterator=0;
-
+    private ScrollView constraintLayout;
     CardView profileCard;
 
 
@@ -68,22 +75,21 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Student Attendance");
 
-        progressBar3 = findViewById(R.id.progressBar3);
-        progressBar3.setVisibility(View.VISIBLE);
 //        Log.i("subject activity",getApplicationContext().getApplicationInfo().toString());
         mContext = this;
         studentNameTextView = (TextView) findViewById(R.id.textView2);
 
         sharedPref=new SharedPref(mContext);
-
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         studentName = sharedPref.getNAME();
         studentId = sharedPref.getID();
         Log.i("subjectid",studentId);
         studentNameTextView = findViewById(R.id.tv_student_name);
         studentNameTextView.setText(studentName);
-
-
-
+        constraintLayout = findViewById(R.id.main_content);
+        customAlertDialog = new CustomAlertDialog(StudentAttendanceActivity.this);
+        customAlertDialog.setTextViewText("Fetching Data");
+        customAlertDialog.show();
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         profileCard = findViewById(R.id.cv_student_info);
@@ -93,8 +99,17 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                 startActivity(new Intent(StudentAttendanceActivity.this,ProfileActivity.class));
             }
         });
+        mTvPercent = findViewById(R.id.student_percent);
         getMyList();
         Log.i("subjectarraylist",studentAttendanceModels.toString());
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                constraintLayout.setVisibility(View.GONE);
+                getMyList();
+            }
+        });
 
     }
 
@@ -103,6 +118,8 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         studentCollection.whereEqualTo("id",studentId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                studentAvgPercent = 0;
+                studentAttendanceModels.clear();
                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                 StudentModel student = documentSnapshot.toObject(StudentModel.class);
                 for(SubjectInStudentModel subject : student.getSubjects())
@@ -113,16 +130,17 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                     model.setAttendedCount(subject.getDates().size());
                     studentAttendanceModels.add(model);
                 }
-                                progressBar3.setVisibility(View.GONE);
-
+                Log.d(TAG, "onSuccess: " + subjectIds);
                 for( final int id : subjectIds )
                 {
                     subjectCollection.whereEqualTo("id",id).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            Log.d(TAG, "onSuccess: id:" + id);
                             DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                            Log.d(TAG, "onSuccess: size" + queryDocumentSnapshots.getDocuments().size());
                             SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
-
+                            Log.d(TAG, "onSuccess: subjectModel" + subjectModel.getName());
                             StudentAttendanceModel test = new StudentAttendanceModel();
 
                             for ( StudentAttendanceModel temp : studentAttendanceModels )
@@ -135,6 +153,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                             }
 
                             test.setSubject(subjectModel.getName());
+                            test.setType(subjectModel.getType());
                             if(subjectModel.getDates() != null)
                                 test.setTotalCount(subjectModel.getDates().size());
                             else
@@ -149,15 +168,26 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                                 float percentage  = (float)test.getAttendedCount()/test.getTotalCount();
                                 percentage = percentage*100;
                                 test.setPercent(String.format("%.2f", percentage));
+                                studentAvgPercent = studentAvgPercent + percentage ;
                             }
-
-
 
                             studentAttendanceAdapter = new StudentAttendanceAdapter(mContext,studentAttendanceModels);
                             mRecyclerView.setAdapter(studentAttendanceAdapter);
+                            if(customAlertDialog.isShowing())
+                                customAlertDialog.dismiss();
+                            constraintLayout.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setRefreshing(false);
+                            mTvPercent.setText(String.format("%.2f", studentAvgPercent) + " %");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: " + id);
+                            Log.d(TAG, "onFailure: " + e.getMessage());
                         }
                     });
                 }
+                studentAvgPercent /= subjectIds.size();
             }
         });
 

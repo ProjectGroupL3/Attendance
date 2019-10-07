@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.AttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
 import com.google.firebase.samples.apps.mlkit.R;
+import com.google.firebase.samples.apps.mlkit.models.SpinnerObjectModel;
 import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
 import com.google.firebase.samples.apps.mlkit.models.TeacherModel;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
@@ -40,8 +43,10 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference subjectCollection = db.collection("subjectCollection");
     private ArrayList<String> listOfSubjects;
+    private ArrayList<SpinnerObjectModel> spinnerObjectModels = new ArrayList<>();
     private int teacherId;
     private Context mContext;
+    private int subjectId;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity().getApplicationContext();
@@ -63,10 +68,21 @@ public class HomeFragment extends Fragment {
 
 
        getListOfSubjects();
+       /* String nameOfSubject = spinner.getSelectedItem().toString();
+        for(SpinnerObjectModel spinnerObjectModel : spinnerObjectModels)
+        {
+            if(spinnerObjectModel.getNameOfSubject() == nameOfSubject)
+            {
+                subjectId = spinnerObjectModel.getSubjectId();
+                break;
+            }
+        }*/
         mBtnAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity().getApplicationContext(), LivePreviewActivity.class));
+                Intent intent = new Intent(getActivity().getApplicationContext(),LivePreviewActivity.class);
+                intent.putExtra("subjectId",subjectId);
+                startActivity(intent);
             }
         });
 
@@ -91,6 +107,8 @@ public class HomeFragment extends Fragment {
                     String subjectName = subjectModel.getName();
                     String className = subjectModel.getDiv();
                     listOfSubject.add(subjectName+" ("+className+" )");
+                    SpinnerObjectModel spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+className+" )",subjectModel.getId());
+                    spinnerObjectModels.add(spinnerObjectModel);
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item, listOfSubject);
                     spinner.setAdapter(spinner_adapter);
 
