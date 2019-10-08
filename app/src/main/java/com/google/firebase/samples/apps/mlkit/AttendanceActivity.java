@@ -73,7 +73,7 @@ public class AttendanceActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setNestedScrollingEnabled(false);
-        //updateAttendanceOfSubject();
+        updateAttendanceOfSubject();
         for(String studentId : presentStudents)
         {
             Log.i("AttendanceActivity",subjectId+" "+teacherId);
