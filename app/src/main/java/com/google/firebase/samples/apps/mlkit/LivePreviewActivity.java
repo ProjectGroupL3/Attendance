@@ -16,6 +16,7 @@ package com.google.firebase.samples.apps.mlkit;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +39,9 @@ import com.google.firebase.samples.apps.mlkit.facedetection.FaceDetectionProcess
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** Demo app showing the various features of ML Kit for Firebase. This class is used to
  * set up continuous frame processing on frames from a camera source. */
@@ -62,12 +66,35 @@ public final class LivePreviewActivity extends AppCompatActivity
   private GraphicOverlay graphicOverlay;
   private String selectedModel = FACE_DETECTION;
 
+
+  private Button doneRecognitionBtn;
+  public static Set recognizedIds=null;
+
+  public static ArrayList<Bitmap>unknown_faces;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Log.d(TAG, "onCreate");
     context=getApplicationContext();
     setContentView(R.layout.activity_live_preview);
+
+    //DONE WITH RECOGNITION
+    recognizedIds=new HashSet();
+    doneRecognitionBtn=findViewById(R.id.done_recognition);
+    doneRecognitionBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        //wait till thread count of face detection processor becomes 0
+        Log.d("Mytag",""+FaceDetectionProcessor.threadCount);
+
+        for(Object o:recognizedIds){
+          Log.d("Mytag",(String)o);
+          
+        }
+        // after it is zero proceed pass the Recognizedids set to next activity
+
+      }
+    });
 
   //  imageView = findViewById(R.id.imgView);
     layout = (LinearLayout) findViewById(R.id.LinearHLayout);
