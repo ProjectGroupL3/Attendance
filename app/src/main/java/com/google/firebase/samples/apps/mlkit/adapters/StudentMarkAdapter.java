@@ -40,7 +40,7 @@ public class StudentMarkAdapter extends RecyclerView.Adapter<StudentMarkAdapter.
         holder.name.setText(studentModel.getName());
         holder.rollNumber.setText(studentModel.getRollNumber());
         holder.lecture1.setChecked(studentModel.isLecture1());
-        holder.lecture2.setChecked(studentModel.isLecture2());
+//        holder.lecture2.setChecked(studentModel.isLecture2());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class StudentMarkAdapter extends RecyclerView.Adapter<StudentMarkAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private CheckBox lecture1;
-        private CheckBox lecture2;
+//        private CheckBox lecture2;
         private TextView name;
         private TextView rollNumber;
         public MyViewHolder(@NonNull View itemView) {
@@ -58,7 +58,7 @@ public class StudentMarkAdapter extends RecyclerView.Adapter<StudentMarkAdapter.
             name = itemView.findViewById(R.id.tv_student_name);
             rollNumber = itemView.findViewById(R.id.tv_student_r_no);
             lecture1 = itemView.findViewById(R.id.lecture1);
-            lecture2 = itemView.findViewById(R.id.lecture2);
+//            lecture2 = itemView.findViewById(R.id.lecture2);
         }
     }
 }

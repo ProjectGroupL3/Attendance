@@ -62,4 +62,5 @@
     <string name="take_attendance">Take Attendance</string>
     <string name="view_defaulters">View Defaulters</string>
     <string name="my_profile">My Profile</string>
+    <string name="submit">submit</string>
 </resources>

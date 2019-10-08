@@ -14,6 +14,7 @@
 package com.google.firebase.samples.apps.mlkit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -55,7 +58,7 @@ public final class LivePreviewActivity extends AppCompatActivity
   private static final String CLASSIFICATION = "Classification";
   private static final String TAG = "LivePreviewActivity";
   private static final int PERMISSION_REQUESTS = 1;
-
+  private int subjectId;
   private ImageView imageView;
   private LinearLayout layout;
   private Context context;
@@ -70,7 +73,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     Log.d(TAG, "onCreate");
     context=getApplicationContext();
     setContentView(R.layout.activity_live_preview);
-
+    subjectId = getIntent().getIntExtra("subjectId",-1);
   //  imageView = findViewById(R.id.imgView);
     layout = (LinearLayout) findViewById(R.id.LinearHLayout);
     preview = (CameraSourcePreview) findViewById(R.id.firePreview);
@@ -107,7 +110,26 @@ public final class LivePreviewActivity extends AppCompatActivity
       getRuntimePermissions();
     }
   }
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.live_preview_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
 
+  // handle button activities
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    Log.i("item id",id+"");
+    Log.i("item id",R.id.submit_button+"");
+    if (id == R.id.submit_button) {
+      // do something here
+      Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
+      intent.putExtra("subjectId",subjectId);
+      startActivity(intent);
+
+    }
+    return super.onOptionsItemSelected(item);
+  }
   @Override
   public synchronized void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
     // An item was selected. You can retrieve the selected item using

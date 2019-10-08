@@ -3,6 +3,7 @@ package com.google.firebase.samples.apps.mlkit.ui.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
     private int teacherId;
     private Context mContext;
     private int subjectId;
+    private String nameOfSubject;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity().getApplicationContext();
@@ -68,15 +70,7 @@ public class HomeFragment extends Fragment {
 
 
        getListOfSubjects();
-       /* String nameOfSubject = spinner.getSelectedItem().toString();
-        for(SpinnerObjectModel spinnerObjectModel : spinnerObjectModels)
-        {
-            if(spinnerObjectModel.getNameOfSubject() == nameOfSubject)
-            {
-                subjectId = spinnerObjectModel.getSubjectId();
-                break;
-            }
-        }*/
+
         mBtnAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,11 +108,46 @@ public class HomeFragment extends Fragment {
 
 
                 }
+                for(SpinnerObjectModel spinnerObjectModel:spinnerObjectModels) {
+                    Log.i("allsubjects",spinnerObjectModel.getNameOfSubject()+" "+spinnerObjectModel.getSubjectId());
+                }
+                nameOfSubject = spinner.getItemAtPosition(0).toString();
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        nameOfSubject = spinner.getItemAtPosition(i).toString();
+                        subjectId = getSubjectId();
+
+                        Log.i("subjectID",subjectId+""+nameOfSubject);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+
+
             }
         });
 
 
 
 
+    }
+    private int getSubjectId()
+    {
+        for(SpinnerObjectModel spinnerObjectModel : spinnerObjectModels)
+        {
+            if(spinnerObjectModel.getNameOfSubject().equals(nameOfSubject))
+            {
+                subjectId = spinnerObjectModel.getSubjectId();
+
+                return subjectId;
+            }
+        }
+        return -1;
     }
 }
