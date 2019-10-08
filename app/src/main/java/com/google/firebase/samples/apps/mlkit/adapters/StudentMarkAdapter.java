@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.samples.apps.mlkit.AttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.R;
 import com.google.firebase.samples.apps.mlkit.models.StudentMarkRvModel;
 
@@ -35,11 +37,18 @@ public class StudentMarkAdapter extends RecyclerView.Adapter<StudentMarkAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        StudentMarkRvModel studentModel = studentModels.get(position);
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+        final StudentMarkRvModel studentModel = studentModels.get(position);
         holder.name.setText(studentModel.getName());
         holder.rollNumber.setText(studentModel.getRollNumber());
         holder.lecture1.setChecked(studentModel.isLecture1());
+        holder.lecture1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                studentModel.setLecture1(isChecked);
+                AttendanceActivity.updatePresentStudents();
+            }
+        });
 //        holder.lecture2.setChecked(studentModel.isLecture2());
     }
 
