@@ -78,4 +78,8 @@ public class SharedPref {
     public String getID() {
         return sharedPreferences.getString("ID","");
     }
+
+    public String getMOBILE() {
+        return sharedPreferences.getString("MOBILE","");
+    }
 }
