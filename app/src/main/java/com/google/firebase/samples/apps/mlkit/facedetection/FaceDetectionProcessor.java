@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
+import com.google.firebase.samples.apps.mlkit.TeacherAttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.others.FrameMetadata;
 import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
@@ -156,21 +158,22 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                             layout.addView(integerImageViewHashMap.get(id));
                             Bitmap bmp=Bitmap.createBitmap(bitmap,x,y,w,h);
                             Log.d(TAG, "onSuccess: ");
-                            createThread(bmp);
+                            createThread(id,bmp);
                         }
                     }
                 }
             }
     }
 
-    private void createThread(Bitmap face) {
+    private void createThread(Integer id,Bitmap face) {
         threadCount++;
         ByteArrayOutputStream stream=new ByteArrayOutputStream();
         face.compress(Bitmap.CompressFormat.PNG,100,stream);
         byte [] bytes=stream.toByteArray();
 
         UploadImage uploadImage=new UploadImage();
-        uploadImage.execute(bytes);
+        Pair<Integer,byte[]> map = new Pair<>(id,bytes);
+        uploadImage.execute(map);
     }
 
     @Override
@@ -178,38 +181,45 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         Log.e(TAG, "Face detection failed " + e);
     }
 
-    private class UploadImage extends AsyncTask<byte[],Void,String> {
+    private class UploadImage extends AsyncTask<Pair<Integer,byte[]>,Void,Pair<Integer,String>> {
 
         @Override
-        protected String doInBackground(byte[]... bytes) {
-            String resp =null;
+        protected Pair<Integer,String> doInBackground(Pair<Integer,byte[]> ... test ) {
+            String resp = null;
+            Pair<Integer,String> p = null;
             try {
                 Socket s ;
                 String ip = "192.168.2.4";
+                int id = test[0].first;
+                byte[] bytes = test[0].second;
                 s = new Socket(ip, 7801);
                 ObjectOutputStream oos=new ObjectOutputStream(s.getOutputStream());
                 Log.d(TAG, "doInBackground: sent here");
-                oos.writeObject(bytes[0]);
+                oos.writeObject(bytes);
                 InputStreamReader isr=new InputStreamReader(s.getInputStream());
                 BufferedReader br=new BufferedReader(isr);
                 resp= br.readLine();
+                p = new Pair<>(id,resp);
             }catch (Exception e){
                 e.printStackTrace();
             }
-            return resp;
+            return p;
         }
 
         @Override
-        protected void onPostExecute(String id) {
-            super.onPostExecute(id);
+        protected void onPostExecute(Pair<Integer,String> p) {
+            super.onPostExecute(p);
             threadCount--;
+            int imageId = p.first;
+            String id = p.second;
             Log.d("Mytag","Thread count "+threadCount);
             Log.d("Mytag","ID "+id);
             if( id != null && !id.equals("unknown")) {
                 LivePreviewActivity.recognizedIds.add(id);
             }else{
                 //what if unknown
-                Toast.makeText(c, "not Known", Toast.LENGTH_SHORT).show();
+                TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(imageId));
+                Log.d(TAG, "onPostExecute: " + TeacherAttendanceActivity.imageViews.size());
             }
         }
     }

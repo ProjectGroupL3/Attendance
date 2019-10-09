@@ -26,12 +26,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 public class TeacherAttendanceActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     SharedPref sharedPref;
     Context mContext;
+    public static ArrayList<ImageView> imageViews;
     public static CustomAlertDialog customAlertDialog;
 
     @Override
@@ -42,6 +46,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mContext = this;
         sharedPref = new SharedPref(mContext);
+        imageViews = new ArrayList<>();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -91,5 +96,11 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        imageViews.clear();
     }
 }

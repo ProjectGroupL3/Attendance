@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +67,7 @@ public class AttendanceActivity extends AppCompatActivity {
     private HashMap<String,String> docIds;
     private ArrayList<StudentModel> studentModelsInDb;
     private int updatingStudentsCount = 0;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,7 @@ public class AttendanceActivity extends AppCompatActivity {
         teacherId = Integer.valueOf(sharedPref.getID());
         subjectId = getIntent().getIntExtra("subjectId",-1);
         presentStudents = new ArrayList<>();
+        imageView = findViewById(R.id.testImage);
 //        presentStudents.addAll(Arrays.asList(new String[]{"C2K17105589", "C2K17105624"}));
         presentStudents = getIntent().getStringArrayListExtra("recognizedIds");
         totalStudentsView = findViewById(R.id.num_students);
@@ -100,6 +105,9 @@ public class AttendanceActivity extends AppCompatActivity {
                 markAttendance();
             }
         });
+
+        Log.d(TAG, "onCreate: " + TeacherAttendanceActivity.imageViews.size());
+        imageView.setImageBitmap(Bitmap.createBitmap(((BitmapDrawable)TeacherAttendanceActivity.imageViews.get(0).getDrawable()).getBitmap()));
     }
 
     private void markAttendance() {

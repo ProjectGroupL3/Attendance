@@ -118,5 +118,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_list_of_students" />
 
+    <ImageView
+        android:id="@+id/testImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mlkit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mark_attendance_button"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
