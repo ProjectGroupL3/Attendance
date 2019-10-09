@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -66,7 +67,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
     private ArrayList<StudentAttendanceModel> studentAttendanceModels = new ArrayList<>();
     private int iterator=0;
     private int subjectsWithAttendanceCount = 0;
-    private ScrollView constraintLayout;
+    private NestedScrollView constraintLayout;
     CardView profileCard;
 
 
@@ -121,6 +122,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 studentAverageTotal = 0;
+                subjectsWithAttendanceCount = 0;
                 studentAttendanceModels.clear();
                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                 StudentModel student = documentSnapshot.toObject(StudentModel.class);
