@@ -45,7 +45,7 @@ import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class StudentProfileActivity extends AppCompatActivity {
 
     private CircleImageView profileImage;
     SharedPreferences sp;
@@ -67,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_student_profile);
         logoutButton = findViewById(R.id.btn_logout);
         studentIdView = findViewById(R.id.tv_profile_id);
         nameView = findViewById(R.id.tv_profile_name);
@@ -93,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 sharedPref.logout();
                 sharedPref.setIsLoggedIn(false);
-                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                Intent intent = new Intent(StudentProfileActivity.this, LoginActivity.class);
                 finishAffinity();
                 startActivity(intent);
                 finish();

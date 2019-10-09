@@ -124,6 +124,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     if (id == R.id.submit_button) {
       // do something here
       Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
+      Log.d(TAG, "onOptionsItemSelected: " + subjectId);
       intent.putExtra("subjectId",subjectId);
       startActivity(intent);
       finish();

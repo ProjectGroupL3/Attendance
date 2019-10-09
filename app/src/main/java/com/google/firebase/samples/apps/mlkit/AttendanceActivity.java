@@ -89,6 +89,7 @@ public class AttendanceActivity extends AppCompatActivity {
         recyclerView.setNestedScrollingEnabled(false);
         updateAttendanceOfSubject();
         getAllStudentsRegisteredToSubject();
+        Log.d(TAG, "onCreate: " + subjectId);
 
         markAttendanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +156,8 @@ public class AttendanceActivity extends AppCompatActivity {
     }
 
     public void getAllStudentsRegisteredToSubject() {
+        alertDialog.setTextViewText("Fetching");
+        alertDialog.show();
         studentCollection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -164,6 +167,7 @@ public class AttendanceActivity extends AppCompatActivity {
                     ArrayList<SubjectInStudentModel> studentSubjects= student.getSubjects();
                     int index = findIndex(studentSubjects);
                     ArrayList<String> dates;
+                    Log.d(TAG, "onSuccess: index" + index);
                     if(index != -1)
                     {
                         totalStudents++;
@@ -193,6 +197,7 @@ public class AttendanceActivity extends AppCompatActivity {
                         recyclerView.setAdapter(attendanceAdapter);
                         totalStudentsView.setText(String.valueOf(totalPresentStudents));
                         progressBar.setProgress(totalPresentStudents*100/totalStudents);
+                        alertDialog.dismiss();
                     }
                 }
             }

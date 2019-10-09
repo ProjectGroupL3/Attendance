@@ -53,8 +53,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_home)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -82,9 +81,11 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
                 finishAffinity();
                 startActivity(intent);
                 finish();
+                break;
             }
-            case R.id.action_settings: break;
-
+            case R.id.action_profile:
+                startActivity(new Intent(mContext,TeacherProfileActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);

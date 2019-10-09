@@ -99,7 +99,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         profileCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StudentAttendanceActivity.this,ProfileActivity.class));
+                startActivity(new Intent(StudentAttendanceActivity.this,StudentProfileActivity.class));
             }
         });
         mTvPercent = findViewById(R.id.student_percent);
@@ -223,7 +223,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
 
             case R.id.myprofile :
 
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                startActivity(new Intent(getApplicationContext(), StudentProfileActivity.class));
 
                 return true;
 

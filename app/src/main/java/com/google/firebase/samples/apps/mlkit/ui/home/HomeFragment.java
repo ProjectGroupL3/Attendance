@@ -35,6 +35,8 @@ import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.util.ArrayList;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
@@ -95,6 +97,7 @@ public class HomeFragment extends Fragment {
         subjectCollection.whereEqualTo("teacherId",teacherId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.d(TAG, "onSuccess: " + queryDocumentSnapshots.getDocuments());
                 for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots)
                 {
                     SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
@@ -105,7 +108,7 @@ public class HomeFragment extends Fragment {
                         listOfSubject.add(subjectName+" ("+batch+")");
                     else
                         listOfSubject.add(subjectName+" ("+className+")");
-                    SpinnerObjectModel spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+className+" )",subjectModel.getId());
+                    SpinnerObjectModel spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+className+")",subjectModel.getId());
                     spinnerObjectModels.add(spinnerObjectModel);
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, listOfSubject);
                     spinner.setAdapter(spinner_adapter);

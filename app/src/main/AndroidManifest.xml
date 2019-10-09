@@ -11,7 +11,8 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".AttendanceActivity"
             android:theme="@style/activity_custom" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".TeacherProfileActivity" />
+        <activity android:name=".StudentProfileActivity" />
         <activity
             android:name=".StudentAttendanceActivity"
             android:exported="true"

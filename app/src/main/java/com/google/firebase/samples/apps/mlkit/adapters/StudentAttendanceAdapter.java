@@ -29,7 +29,7 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.subject_row,viewGroup,false);
 
         return new MyHolder(view);
     }
