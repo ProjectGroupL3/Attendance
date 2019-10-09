@@ -126,7 +126,7 @@ public final class LivePreviewActivity extends AppCompatActivity
       Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
       intent.putExtra("subjectId",subjectId);
       startActivity(intent);
-
+      finish();
     }
     return super.onOptionsItemSelected(item);
   }

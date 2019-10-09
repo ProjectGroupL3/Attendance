@@ -14,8 +14,9 @@
         android:text="Yashodhara Kulkarni"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:maxWidth="135dp"
-        android:textSize="20sp"
+        android:maxWidth="160dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -23,20 +24,20 @@
         android:id="@+id/tv_student_r_no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="31339"
-        android:textSize="20sp"
-        android:layout_marginStart="100dp"
+        android:text="C2K1235196"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="180dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/lecture1"
+        app:layout_constraintEnd_toStartOf="@+id/lecture1"
         app:layout_constraintTop_toTopOf="parent"/>
-
 
 
     <CheckBox
         android:id="@+id/lecture1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/tv_student_r_no"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
