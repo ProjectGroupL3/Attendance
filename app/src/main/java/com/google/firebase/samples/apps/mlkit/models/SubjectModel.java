@@ -9,6 +9,16 @@ public class SubjectModel {
     int teacherId;
     ArrayList<String> dates=new ArrayList<>();
     String Type;
+    String batch;
+
+    public String getBatch() {
+        return batch;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
+    }
+
     public SubjectModel()
     {
 

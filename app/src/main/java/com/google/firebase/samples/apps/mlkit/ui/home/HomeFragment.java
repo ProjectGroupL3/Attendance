@@ -100,13 +100,15 @@ public class HomeFragment extends Fragment {
                     SubjectModel subjectModel = documentSnapshot.toObject(SubjectModel.class);
                     String subjectName = subjectModel.getName();
                     String className = subjectModel.getDiv();
-                    listOfSubject.add(subjectName+" ("+className+" )");
+                    String batch = subjectModel.getBatch();
+                    if( subjectModel.getType().equals("practical"))
+                        listOfSubject.add(subjectName+" ("+batch+")");
+                    else
+                        listOfSubject.add(subjectName+" ("+className+")");
                     SpinnerObjectModel spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+className+" )",subjectModel.getId());
                     spinnerObjectModels.add(spinnerObjectModel);
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item, listOfSubject);
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, listOfSubject);
                     spinner.setAdapter(spinner_adapter);
-
-
                 }
                 for(SpinnerObjectModel spinnerObjectModel:spinnerObjectModels) {
                     Log.i("allsubjects",spinnerObjectModel.getNameOfSubject()+" "+spinnerObjectModel.getSubjectId());
