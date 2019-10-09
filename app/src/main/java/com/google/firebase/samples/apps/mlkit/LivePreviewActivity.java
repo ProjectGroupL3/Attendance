@@ -22,6 +22,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,11 +40,15 @@ import android.widget.ToggleButton;
 import com.google.android.gms.common.annotation.KeepName;
 import com.google.firebase.samples.apps.mlkit.facedetection.FaceDetectionProcessor;
 import com.google.firebase.samples.apps.mlkit.others.CameraSourcePreview;
+import com.google.firebase.samples.apps.mlkit.others.CustomAlertDialog;
 import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** Demo app showing the various features of ML Kit for Firebase. This class is used to
  * set up continuous frame processing on frames from a camera source. */
@@ -66,6 +72,9 @@ public final class LivePreviewActivity extends AppCompatActivity
   private CameraSourcePreview preview;
   private GraphicOverlay graphicOverlay;
   private String selectedModel = FACE_DETECTION;
+  public static Set<String> recognizedIds;
+  private CustomAlertDialog customAlertDialog;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +93,10 @@ public final class LivePreviewActivity extends AppCompatActivity
     if (graphicOverlay == null) {
       Log.d(TAG, "graphicOverlay is null");
     }
+
+    customAlertDialog = new CustomAlertDialog(LivePreviewActivity.this);
+    customAlertDialog.setTextViewText("Recognizing");
+    recognizedIds = new HashSet<>();
 
     Spinner spinner = (Spinner) findViewById(R.id.spinner);
     List<String> options = new ArrayList<>();
@@ -122,12 +135,31 @@ public final class LivePreviewActivity extends AppCompatActivity
     Log.i("item id",id+"");
     Log.i("item id",R.id.submit_button+"");
     if (id == R.id.submit_button) {
-      // do something here
-      Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
-      Log.d(TAG, "onOptionsItemSelected: " + subjectId);
-      intent.putExtra("subjectId",subjectId);
-      startActivity(intent);
-      finish();
+      customAlertDialog.show();
+      final Handler handler = new Handler();
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          if( FaceDetectionProcessor.threadCount > 0 )
+            handler.postDelayed(this, 1000);
+          else
+          {
+            customAlertDialog.dismiss();
+            // do something here
+            Log.d(TAG, "onOptionsItemSelected: " + recognizedIds);
+            Log.d(TAG, "onOptionsItemSelected: " + subjectId);
+
+            Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
+            intent.putExtra("subjectId",subjectId);
+            String[] objects = new String[recognizedIds.size()];
+            recognizedIds.toArray(objects);
+            final ArrayList<String> list = new ArrayList<>(Arrays.asList(objects));
+            intent.putStringArrayListExtra("recognizedIds",list);
+            startActivity(intent);
+            finish();
+          }
+        }
+      }, 1000);
     }
     return super.onOptionsItemSelected(item);
   }

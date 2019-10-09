@@ -54,7 +54,7 @@ public class AttendanceActivity extends AppCompatActivity {
     private int teacherId;
     private static TextView totalStudentsView;
     private SharedPref sharedPref;
-    private Set<String> presentStudents;
+    private ArrayList<String> presentStudents;
     private static int totalPresentStudents;
     private static ArrayList<StudentMarkRvModel> models = new ArrayList<>();
     private static final String TAG = "AttendanceActivity";
@@ -76,8 +76,9 @@ public class AttendanceActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.pb_students_percent);
         teacherId = Integer.valueOf(sharedPref.getID());
         subjectId = getIntent().getIntExtra("subjectId",-1);
-        presentStudents = new HashSet<>();
-        presentStudents.addAll(Arrays.asList(new String[]{"C2K17105589", "C2K17105624"}));
+        presentStudents = new ArrayList<>();
+//        presentStudents.addAll(Arrays.asList(new String[]{"C2K17105589", "C2K17105624"}));
+        presentStudents = getIntent().getStringArrayListExtra("recognizedIds");
         totalStudentsView = findViewById(R.id.num_students);
         totalPresentStudents=0;
         totalStudents = 0;

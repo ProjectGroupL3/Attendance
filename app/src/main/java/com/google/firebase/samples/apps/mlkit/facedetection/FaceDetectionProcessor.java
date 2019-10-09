@@ -19,11 +19,14 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
+
+import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -36,7 +39,12 @@ import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
 import com.google.firebase.samples.apps.mlkit.others.VisionProcessorBase;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +63,8 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     String packageName;
     HashMap<Integer, ImageView> integerImageViewHashMap;
     HashMap<Integer, Integer> singleFaceDetectCount;
+    public static int threadCount;
+
     public FaceDetectionProcessor(Activity _activity) {
         activity=_activity;
         //res=context.getResources();
@@ -81,6 +91,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
 //        imageViewArr = new ArrayList<>();
         integerImageViewHashMap = new HashMap<>();
         singleFaceDetectCount = new HashMap<>();
+        threadCount =0;
     }
 
     @Override
@@ -132,6 +143,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                     } else {
                         int prev_count = singleFaceDetectCount.get(id);
                         prev_count++;
+                        singleFaceDetectCount.put(id,prev_count);
                         if( prev_count < 1 )
                         {
                             singleFaceDetectCount.put(id,prev_count);
@@ -142,14 +154,63 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         {
                             layout.removeView(integerImageViewHashMap.get(id));
                             layout.addView(integerImageViewHashMap.get(id));
-
+                            Bitmap bmp=Bitmap.createBitmap(bitmap,x,y,w,h);
+                            Log.d(TAG, "onSuccess: ");
+                            createThread(bmp);
                         }
                     }
                 }
             }
     }
+
+    private void createThread(Bitmap face) {
+        threadCount++;
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        face.compress(Bitmap.CompressFormat.PNG,100,stream);
+        byte [] bytes=stream.toByteArray();
+
+        UploadImage uploadImage=new UploadImage();
+        uploadImage.execute(bytes);
+    }
+
     @Override
     protected void onFailure(@NonNull Exception e) {
         Log.e(TAG, "Face detection failed " + e);
+    }
+
+    private class UploadImage extends AsyncTask<byte[],Void,String> {
+
+        @Override
+        protected String doInBackground(byte[]... bytes) {
+            String resp =null;
+            try {
+                Socket s ;
+                String ip = "192.168.2.4";
+                s = new Socket(ip, 7801);
+                ObjectOutputStream oos=new ObjectOutputStream(s.getOutputStream());
+                Log.d(TAG, "doInBackground: sent here");
+                oos.writeObject(bytes[0]);
+                InputStreamReader isr=new InputStreamReader(s.getInputStream());
+                BufferedReader br=new BufferedReader(isr);
+                resp= br.readLine();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return resp;
+        }
+
+        @Override
+        protected void onPostExecute(String id) {
+            super.onPostExecute(id);
+            threadCount--;
+            Log.d("Mytag","Thread count "+threadCount);
+            Log.d("Mytag","ID "+id);
+            if( id != null && !id.equals("unknown")) {
+                LivePreviewActivity.recognizedIds.add(id);
+            }else{
+                //what if unknown
+                Toast.makeText(c, "not Known", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -28,9 +28,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.samples.apps.mlkit.AttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
 import com.google.firebase.samples.apps.mlkit.R;
+import com.google.firebase.samples.apps.mlkit.TeacherAttendanceActivity;
+import com.google.firebase.samples.apps.mlkit.TeacherProfileActivity;
 import com.google.firebase.samples.apps.mlkit.models.SpinnerObjectModel;
 import com.google.firebase.samples.apps.mlkit.models.SubjectModel;
 import com.google.firebase.samples.apps.mlkit.models.TeacherModel;
+import com.google.firebase.samples.apps.mlkit.others.CustomAlertDialog;
 import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.util.ArrayList;
@@ -69,13 +72,16 @@ public class HomeFragment extends Fragment {
         spinner = root.findViewById(R.id.spinner_list);
         mBtnAttendance = root.findViewById(R.id.btn_take_attendance);
 
-
-
        getListOfSubjects();
 
         mBtnAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(subjectId == -1)
+                {
+                    nameOfSubject = spinner.getItemAtPosition(0).toString();
+                    subjectId = getSubjectId();
+                }
                 Intent intent = new Intent(getActivity().getApplicationContext(),LivePreviewActivity.class);
                 intent.putExtra("subjectId",subjectId);
                 startActivity(intent);
@@ -93,6 +99,8 @@ public class HomeFragment extends Fragment {
     }
     private void getListOfSubjects()
     {
+        TeacherAttendanceActivity.customAlertDialog.setTextViewText("Fetching");
+        TeacherAttendanceActivity.customAlertDialog.show();
         final ArrayList<String> listOfSubject = new ArrayList<>();
         subjectCollection.whereEqualTo("teacherId",teacherId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -104,11 +112,17 @@ public class HomeFragment extends Fragment {
                     String subjectName = subjectModel.getName();
                     String className = subjectModel.getDiv();
                     String batch = subjectModel.getBatch();
+                    SpinnerObjectModel spinnerObjectModel;
                     if( subjectModel.getType().equals("practical"))
+                    {
                         listOfSubject.add(subjectName+" ("+batch+")");
+                        spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+batch+")",subjectModel.getId());
+                    }
                     else
+                    {
                         listOfSubject.add(subjectName+" ("+className+")");
-                    SpinnerObjectModel spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+className+")",subjectModel.getId());
+                        spinnerObjectModel = new SpinnerObjectModel(subjectName+" ("+className+")",subjectModel.getId());
+                    }
                     spinnerObjectModels.add(spinnerObjectModel);
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, listOfSubject);
                     spinner.setAdapter(spinner_adapter);
@@ -117,6 +131,7 @@ public class HomeFragment extends Fragment {
                     Log.i("allsubjects",spinnerObjectModel.getNameOfSubject()+" "+spinnerObjectModel.getSubjectId());
                 }
                 nameOfSubject = spinner.getItemAtPosition(0).toString();
+                TeacherAttendanceActivity.customAlertDialog.dismiss();
 
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
