@@ -15,6 +15,7 @@ package com.google.firebase.samples.apps.mlkit.facedetection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 
@@ -35,10 +36,12 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
+import com.google.firebase.samples.apps.mlkit.AttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.TeacherAttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.others.FrameMetadata;
 import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 import com.google.firebase.samples.apps.mlkit.others.VisionProcessorBase;
 
 import java.io.BufferedReader;
@@ -50,6 +53,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 /** Face Detector Demo. */
 public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVisionFace>> {
 
@@ -57,6 +62,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     private Bitmap bitmap;
     private final FirebaseVisionFaceDetector detector;
     private LinearLayout layout;
+    private SharedPref sharedPref;
     View v;
     Context c;
     Resources res;
@@ -80,7 +86,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options);
     }
 
-    public FaceDetectionProcessor(LinearLayout layout, LivePreviewActivity livePreviewActivity) {
+    public FaceDetectionProcessor(SharedPref sharedPref,LinearLayout layout, LivePreviewActivity livePreviewActivity) {
         FirebaseVisionFaceDetectorOptions options =
                 new FirebaseVisionFaceDetectorOptions.Builder()
                         .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
@@ -88,6 +94,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         .build();
         this.layout = layout;
         c=livePreviewActivity;
+        this.sharedPref = sharedPref;
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options);
 //        idlist=new ArrayList<>();
 //        imageViewArr = new ArrayList<>();
@@ -189,10 +196,15 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
             Pair<Integer,String> p = null;
             try {
                 Socket s ;
-                String ip = "192.168.2.4";
+                String ip = sharedPref.getIP();
+                if(ip.equals(""))
+                    ip = "127.0.0.1";
+                String port = sharedPref.getPort();
+                if(port.equals(""))
+                    port = "7800";
                 int id = test[0].first;
                 byte[] bytes = test[0].second;
-                s = new Socket(ip, 7801);
+                s = new Socket(ip, Integer.valueOf(port));
                 ObjectOutputStream oos=new ObjectOutputStream(s.getOutputStream());
                 Log.d(TAG, "doInBackground: sent here");
                 oos.writeObject(bytes);
@@ -201,6 +213,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                 resp= br.readLine();
                 p = new Pair<>(id,resp);
             }catch (Exception e){
+                //if fail go to checkbox activity
                 e.printStackTrace();
             }
             return p;

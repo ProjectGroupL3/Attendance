@@ -42,6 +42,7 @@ import com.google.firebase.samples.apps.mlkit.facedetection.FaceDetectionProcess
 import com.google.firebase.samples.apps.mlkit.others.CameraSourcePreview;
 import com.google.firebase.samples.apps.mlkit.others.CustomAlertDialog;
 import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public final class LivePreviewActivity extends AppCompatActivity
   private String selectedModel = FACE_DETECTION;
   public static Set<String> recognizedIds;
   private CustomAlertDialog customAlertDialog;
+  private SharedPref sharedPref;
 
 
   @Override
@@ -83,6 +85,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     context=getApplicationContext();
     setContentView(R.layout.activity_live_preview);
     subjectId = getIntent().getIntExtra("subjectId",-1);
+    sharedPref = new SharedPref(context);
   //  imageView = findViewById(R.id.imgView);
     layout = (LinearLayout) findViewById(R.id.LinearHLayout);
     preview = (CameraSourcePreview) findViewById(R.id.firePreview);
@@ -206,7 +209,7 @@ public final class LivePreviewActivity extends AppCompatActivity
       switch (model) {
         case FACE_DETECTION:
           Log.i(TAG, "Using Face Detector Processor");
-          cameraSource.setMachineLearningFrameProcessor(new FaceDetectionProcessor(layout,this));
+          cameraSource.setMachineLearningFrameProcessor(new FaceDetectionProcessor(sharedPref,layout,this));
           break;
         default:
           Log.e(TAG, "Unknown model: " + model);

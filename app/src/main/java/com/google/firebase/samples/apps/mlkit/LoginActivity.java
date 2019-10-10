@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     CreateDatabase database = new CreateDatabase();
     int subjectId = 1;
     private String phoneNumber;
-    Button sendPhoneNumber;
     boolean isStudent=false;
     private String name;
     private String division;
@@ -71,15 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("subjectLogin","in login activity");
         context=this;
         mEtMobNo = (EditText)findViewById(R.id.et_mobno);
-
-      //  Log.i("phone ",phoneNumber);
-        textView = findViewById(R.id.title);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, StudentAttendanceActivity.class));
-            }
-        });
 
         mEtMobNo.setOnTouchListener(new View.OnTouchListener() {
             @Override

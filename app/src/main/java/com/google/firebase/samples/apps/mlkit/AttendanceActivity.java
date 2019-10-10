@@ -12,8 +12,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +52,7 @@ public class AttendanceActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     StudentMarkAdapter attendanceAdapter;
     private Button markAttendanceButton;
+    LinearLayout horizontalScrollView;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference subjectCollection = db.collection("subjectCollection");
@@ -67,12 +71,12 @@ public class AttendanceActivity extends AppCompatActivity {
     private HashMap<String,String> docIds;
     private ArrayList<StudentModel> studentModelsInDb;
     private int updatingStudentsCount = 0;
-    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
+        horizontalScrollView = findViewById(R.id.test);
         mContext = getApplicationContext();
         markAttendanceButton = findViewById(R.id.mark_attendance_button);
         sharedPref = new SharedPref(mContext);
@@ -81,7 +85,6 @@ public class AttendanceActivity extends AppCompatActivity {
         teacherId = Integer.valueOf(sharedPref.getID());
         subjectId = getIntent().getIntExtra("subjectId",-1);
         presentStudents = new ArrayList<>();
-        imageView = findViewById(R.id.testImage);
 //        presentStudents.addAll(Arrays.asList(new String[]{"C2K17105589", "C2K17105624"}));
         presentStudents = getIntent().getStringArrayListExtra("recognizedIds");
         totalStudentsView = findViewById(R.id.num_students);
@@ -107,7 +110,18 @@ public class AttendanceActivity extends AppCompatActivity {
         });
 
         Log.d(TAG, "onCreate: " + TeacherAttendanceActivity.imageViews.size());
-        imageView.setImageBitmap(Bitmap.createBitmap(((BitmapDrawable)TeacherAttendanceActivity.imageViews.get(0).getDrawable()).getBitmap()));
+        if(TeacherAttendanceActivity.imageViews.size() > 0)
+        for( ImageView imageView : TeacherAttendanceActivity.imageViews )
+        {
+            ViewGroup p = (ViewGroup) imageView.getParent();
+            if(p!=null)
+            {
+                p.removeView(imageView);
+                imageView.setMaxWidth(150);
+                imageView.setMaxHeight(150);
+                horizontalScrollView.addView(imageView);
+            }
+        }
     }
 
     private void markAttendance() {

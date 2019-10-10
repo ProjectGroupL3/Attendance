@@ -86,6 +86,9 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
             case R.id.action_profile:
                 startActivity(new Intent(mContext,TeacherProfileActivity.class));
                 break;
+            case R.id.action_settings:
+                startActivity(new Intent(mContext,SettingsActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);

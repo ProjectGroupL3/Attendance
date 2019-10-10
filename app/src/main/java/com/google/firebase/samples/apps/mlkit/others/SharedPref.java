@@ -15,7 +15,8 @@ public class SharedPref {
     private String ID = "ID";
     private String DIVISION = "DIVISION";
     private String IS_STUDENT = "IS_STUDENT";
-
+    private String IP = "IP_ADDR";
+    private String PORT = "PORT_NUM";
 
     public SharedPref(Context context) {
         this.mContext = context;
@@ -65,21 +66,40 @@ public class SharedPref {
         editor.commit();
     }
 
-    public String getNAME() {
-        return sharedPreferences.getString("NAME","");
+    public void setPort(String port)
+    {
+        editor.putString(PORT,port);
+        editor.commit();
     }
 
-    public Boolean isStudent() { return sharedPreferences.getBoolean("IS_STUDENT", true); }
+    public void setIp(String ip)
+    {
+
+        editor.putString(IP,ip);
+        editor.commit();
+    }
+
+    public String getIP() {
+        return sharedPreferences.getString(IP,"");
+    }
+    public String getPort() {
+        return sharedPreferences.getString(PORT,"");
+    }
+    public String getNAME() {
+        return sharedPreferences.getString(NAME,"");
+    }
+
+    public Boolean isStudent() { return sharedPreferences.getBoolean(IS_STUDENT, true); }
 
     public String getDIVISION() {
-        return sharedPreferences.getString("DIVISION","");
+        return sharedPreferences.getString(DIVISION,"");
     }
 
     public String getID() {
-        return sharedPreferences.getString("ID","");
+        return sharedPreferences.getString(ID,"");
     }
 
     public String getMOBILE() {
-        return sharedPreferences.getString("MOBILE","");
+        return sharedPreferences.getString(MOBILE,"");
     }
 }
