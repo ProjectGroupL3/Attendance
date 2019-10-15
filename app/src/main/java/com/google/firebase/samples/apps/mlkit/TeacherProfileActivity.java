@@ -24,14 +24,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TeacherProfileActivity extends AppCompatActivity {
 
-    SharedPreferences sp;
+    SharedPreferences sp1;
     TextView teacherIdView;
     TextView nameViewTeacher;
     TextView mobileNoView;
     SharedPref sharedPref;
     Context mContext;
     Button logoutButton1;
-    private CircleImageView profileImage;
+    private CircleImageView profileImage1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +42,14 @@ public class TeacherProfileActivity extends AppCompatActivity {
         teacherIdView = findViewById(R.id.tv_profile_id_teacher);
         nameViewTeacher = findViewById(R.id.tv_profile_name_teacher);
         mobileNoView = findViewById(R.id.tv_profile_mobno);
-        profileImage = findViewById(R.id.profile_image_teacher);
+        profileImage1 = findViewById(R.id.profile_image_teacher);
 
-        sp=getSharedPreferences("profilePicture",MODE_PRIVATE);
+        sp1=getSharedPreferences("profilePicture",MODE_PRIVATE);
 
-        if(!sp.getString("dp","").equals("")){
-            byte[] decodedString = Base64.decode(sp.getString("dp", ""), Base64.DEFAULT);
+        if(!sp1.getString("dp","").equals("")){
+            byte[] decodedString = Base64.decode(sp1.getString("dp", ""), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            profileImage.setImageBitmap(decodedByte);
+            profileImage1.setImageBitmap(decodedByte);
         }
 
         mContext = this;
@@ -71,7 +71,7 @@ public class TeacherProfileActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Profile Activity");
 
-        profileImage.setOnClickListener(new View.OnClickListener() {
+        profileImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -97,13 +97,13 @@ public class TeacherProfileActivity extends AppCompatActivity {
 
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-                profileImage.setImageBitmap(bitmap);
+                profileImage1.setImageBitmap(bitmap);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                 byte[] b = baos.toByteArray();
                 String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-                sp.edit().putString("dp", encodedImage).commit();
+                sp1.edit().putString("dp", encodedImage).commit();
 
             } catch (FileNotFoundException e) {
 
