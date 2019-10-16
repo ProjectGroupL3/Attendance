@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
@@ -153,17 +154,17 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         int prev_count = singleFaceDetectCount.get(id);
                         prev_count++;
                         singleFaceDetectCount.put(id,prev_count);
-                        if( prev_count < 1 )
+                        ImageView img = integerImageViewHashMap.get(id);
+                        if( prev_count <= 1 )
                         {
-                            singleFaceDetectCount.put(id,prev_count);
-                            ImageView img = integerImageViewHashMap.get(id);
                             img.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
                         }
-                        else if( prev_count == 1 )
+                        else if( prev_count ==2 )
                         {
                             layout.removeView(integerImageViewHashMap.get(id));
                             layout.addView(integerImageViewHashMap.get(id));
-                            Bitmap bmp=Bitmap.createBitmap(bitmap,x,y,w,h);
+//                            Bitmap bmp=Bitmap.createBitmap(bitmap,x,y,w,h);
+                            Bitmap bmp = ((BitmapDrawable)img.getDrawable()).getBitmap();
                             Log.d(TAG, "onSuccess: ");
                             createThread(id,bmp);
                         }
@@ -194,6 +195,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         protected Pair<Integer,String> doInBackground(Pair<Integer,byte[]> ... test ) {
             String resp = null;
             Pair<Integer,String> p = null;
+            p = new Pair<>(test[0].first,null);
             try {
                 Socket s ;
                 String ip = sharedPref.getIP();
@@ -223,16 +225,23 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         protected void onPostExecute(Pair<Integer,String> p) {
             super.onPostExecute(p);
             threadCount--;
-            int imageId = p.first;
-            String id = p.second;
-            Log.d("Mytag","Thread count "+threadCount);
-            Log.d("Mytag","ID "+id);
-            if( id != null && !id.equals("unknown")) {
-                LivePreviewActivity.recognizedIds.add(id);
-            }else{
-                //what if unknown
-                TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(imageId));
-                Log.d(TAG, "onPostExecute: " + TeacherAttendanceActivity.imageViews.size());
+            if(p.second!=null)
+            {
+                int imageId = p.first;
+                String id = p.second;
+                Log.d("Mytag","Thread count "+threadCount);
+                Log.d("Mytag","ID "+id);
+                if( id != null && !id.equals("unknown")) {
+                    LivePreviewActivity.recognizedIds.add(id);
+                }else{
+                    //what if unknown
+                    TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(imageId));
+                    Log.d(TAG, "onPostExecute: " + TeacherAttendanceActivity.imageViews.size());
+                }
+            }
+            else
+            {
+                TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(p.first));
             }
         }
     }

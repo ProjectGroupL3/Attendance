@@ -88,12 +88,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), AttendanceActivity.class));
-            }
-        });
+//        textView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getContext(), AttendanceActivity.class));
+//            }
+//        });
 
         return root;
     }

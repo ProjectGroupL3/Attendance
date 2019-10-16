@@ -38,11 +38,8 @@ public class OTPActivity extends AppCompatActivity {
     private EditText mEtOtp1, mEtOtp2, mEtOtp3, mEtOtp4, mEtOtp5, mEtOtp6;
     private String verificationId;
     private FirebaseAuth mAuth;
-
-    private EditText editText;
     String phoneNumber;
     boolean isStudent;
-    Bundle bundle;
     private TextView mTvResendOtp, mTvDidNotReceive, mTvTimer, mTvPhoneno;
     private CountDownTimer mCountDownTimer;
     private PhoneAuthProvider.ForceResendingToken mForceResendingToken;
