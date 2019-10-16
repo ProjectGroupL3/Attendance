@@ -1,6 +1,6 @@
 package com.google.firebase.samples.apps.mlkit.models;
 
-public class SpinnerObjectModel {
+public class SpinnerObjectModel{
     private String nameOfSubject;
     private int subjectId;
     public SpinnerObjectModel()

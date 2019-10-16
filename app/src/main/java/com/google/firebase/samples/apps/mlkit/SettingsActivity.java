@@ -24,6 +24,11 @@ public class SettingsActivity extends AppCompatActivity {
         mEtPort = findViewById(R.id.et_port_no);
         button = findViewById(R.id.btn_change_ip);
         sharedPref = new SharedPref(getApplicationContext());
+        if( sharedPref.getIP()!= null && sharedPref.getPort() != null)
+        {
+            mEtIp.setText(sharedPref.getIP());
+            mEtPort.setText(sharedPref.getPort());
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

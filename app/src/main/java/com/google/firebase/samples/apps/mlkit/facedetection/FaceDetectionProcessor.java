@@ -29,6 +29,7 @@ import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
@@ -132,7 +133,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                 FaceGraphic faceGraphic = new FaceGraphic(graphicOverlay);
                 graphicOverlay.add(faceGraphic);
                 faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
-                if( total % 2 == 0 )
+                if( total % 2 == 0 && LivePreviewActivity.stopRecog)
                 {
                     int id = face.getTrackingId();
                     int x = face.getBoundingBox().left;
