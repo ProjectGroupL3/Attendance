@@ -132,7 +132,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                 FaceGraphic faceGraphic = new FaceGraphic(graphicOverlay);
                 graphicOverlay.add(faceGraphic);
                 faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
-                if( total % 3 == 0 )
+                if( total % 2 == 0 )
                 {
                     int id = face.getTrackingId();
                     int x = face.getBoundingBox().left;
@@ -155,11 +155,11 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         prev_count++;
                         singleFaceDetectCount.put(id,prev_count);
                         ImageView img = integerImageViewHashMap.get(id);
-                        if( prev_count <= 1 )
+                        if( prev_count < 1 )
                         {
                             img.setImageBitmap(Bitmap.createBitmap(bitmap, x, y, w, h));
                         }
-                        else if( prev_count ==2 )
+                        else if( prev_count ==1 )
                         {
                             layout.removeView(integerImageViewHashMap.get(id));
                             layout.addView(integerImageViewHashMap.get(id));
