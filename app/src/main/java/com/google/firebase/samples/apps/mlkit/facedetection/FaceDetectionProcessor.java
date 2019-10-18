@@ -15,7 +15,6 @@ package com.google.firebase.samples.apps.mlkit.facedetection;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 
@@ -25,12 +24,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
-import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -38,7 +34,6 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
-import com.google.firebase.samples.apps.mlkit.AttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.TeacherAttendanceActivity;
 import com.google.firebase.samples.apps.mlkit.others.FrameMetadata;
 import com.google.firebase.samples.apps.mlkit.others.GraphicOverlay;
@@ -54,8 +49,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
-
-import static androidx.core.content.ContextCompat.startActivity;
 
 /** Face Detector Demo. */
 public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVisionFace>> {
@@ -133,7 +126,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                 FaceGraphic faceGraphic = new FaceGraphic(graphicOverlay);
                 graphicOverlay.add(faceGraphic);
                 faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
-                if( total % 2 == 0 && LivePreviewActivity.stopRecog)
+                if( total % 2 == 0 && TeacherAttendanceActivity.startRecog)
                 {
                     int id = face.getTrackingId();
                     int x = face.getBoundingBox().left;
