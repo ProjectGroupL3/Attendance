@@ -34,7 +34,7 @@ public class SharedPref {
         editor.putString(MOBILE,mobile);
         editor.putString(DIVISION,division);
         editor.putBoolean(IS_STUDENT,isStudent);
-        setIsLoggedIn(true);
+//        setIsLoggedIn(true);
         editor.apply();
     }
 

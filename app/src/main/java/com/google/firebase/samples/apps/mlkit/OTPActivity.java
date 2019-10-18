@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.samples.apps.mlkit.others.CustomAlertDialog;
+import com.google.firebase.samples.apps.mlkit.others.SharedPref;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +46,7 @@ public class OTPActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mForceResendingToken;
     private ArrayList<EditText> mArrayList;
     private CustomAlertDialog customAlertDialog;
+    SharedPref sharedPref;
     private static final String TAG = "OTPActivity";
 
     @Override
@@ -61,6 +63,7 @@ public class OTPActivity extends AppCompatActivity {
         mEtOtp6 = findViewById(R.id.otp_edit_text6);
         mTvResendOtp = findViewById(R.id.tv_resend);
         customAlertDialog = new CustomAlertDialog(mContext);
+        sharedPref =  new SharedPref(mContext);
         customAlertDialog.setTextViewText("Validating...");
 
         addTextWatcher(mEtOtp1);
@@ -136,13 +139,14 @@ public class OTPActivity extends AppCompatActivity {
                                 Intent intent = new Intent(OTPActivity.this,StudentAttendanceActivity.class);
                                 //intent.putExtra("phoneNumber",phoneNumber);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                sharedPref.setIsLoggedIn(true);
                                 startActivity(intent);
                             }
                             else
                             {
                                 Intent intent = new Intent(OTPActivity.this, TeacherAttendanceActivity.class);
                                // intent.putExtra("phoneNumber",phoneNumber);
-
+                                sharedPref.setIsLoggedIn(true);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             }
