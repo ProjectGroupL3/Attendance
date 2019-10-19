@@ -55,7 +55,7 @@ public class AttendanceActivity extends AppCompatActivity {
     private SharedPref sharedPref;
     private ArrayList<String> presentStudents;
     private static int totalPresentStudents;
-    private static ArrayList<StudentMarkRvModel> models = new ArrayList<>();
+    private static ArrayList<StudentMarkRvModel> models;
     private static final String TAG = "AttendanceActivity";
     private static ProgressBar progressBar;
     private static int totalStudents;
@@ -89,7 +89,7 @@ public class AttendanceActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setNestedScrollingEnabled(false);
-
+        models = new ArrayList<>();
         getAllStudentsRegisteredToSubject();
         Log.d(TAG, "onCreate: " + subjectId);
 
