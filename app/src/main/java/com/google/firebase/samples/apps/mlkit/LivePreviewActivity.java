@@ -76,7 +76,7 @@ public final class LivePreviewActivity extends AppCompatActivity
   public static Set<String> recognizedIds;
   private CustomAlertDialog customAlertDialog;
   private SharedPref sharedPref;
-  public static boolean stopRecog = true;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +138,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     Log.i("item id",id+"");
     Log.i("item id",R.id.submit_button+"");
     if (id == R.id.submit_button) {
-      stopRecog = false;
+      TeacherAttendanceActivity.startRecog = false;
       customAlertDialog.show();
       final Handler handler = new Handler();
       handler.postDelayed(new Runnable() {

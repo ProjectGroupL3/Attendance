@@ -37,7 +37,7 @@ public class TeacherAttendanceActivity extends AppCompatActivity {
     Context mContext;
     public static ArrayList<ImageView> imageViews;
     public static CustomAlertDialog customAlertDialog;
-
+    public static boolean startRecog = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
