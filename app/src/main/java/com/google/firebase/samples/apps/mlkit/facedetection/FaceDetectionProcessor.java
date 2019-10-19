@@ -25,11 +25,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
-import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
@@ -51,11 +49,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
-
-import static androidx.core.content.ContextCompat.startActivity;
 
 /** Face Detector Demo. */
 public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVisionFace>> {
@@ -133,7 +130,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                 FaceGraphic faceGraphic = new FaceGraphic(graphicOverlay);
                 graphicOverlay.add(faceGraphic);
                 faceGraphic.updateFace(face, frameMetadata.getCameraFacing());
-                if( total % 2 == 0 && LivePreviewActivity.stopRecog)
+                if( total % 2 == 0 && TeacherAttendanceActivity.startRecog)
                 {
                     int id = face.getTrackingId();
                     int x = face.getBoundingBox().left;
@@ -191,7 +188,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     }
 
     private class UploadImage extends AsyncTask<Pair<Integer,byte[]>,Void,Pair<Integer,String>> {
-
+        boolean isError = false;
         @Override
         protected Pair<Integer,String> doInBackground(Pair<Integer,byte[]> ... test ) {
             String resp = null;
@@ -207,7 +204,8 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                     port = "7800";
                 int id = test[0].first;
                 byte[] bytes = test[0].second;
-                s = new Socket(ip, Integer.valueOf(port));
+                s = new Socket();
+                s.connect(new InetSocketAddress(ip, Integer.valueOf(port)),3000);
                 ObjectOutputStream oos=new ObjectOutputStream(s.getOutputStream());
                 Log.d(TAG, "doInBackground: sent here");
                 oos.writeObject(bytes);
@@ -218,6 +216,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
             }catch (Exception e){
                 //if fail go to checkbox activity
                 e.printStackTrace();
+                isError = true;
             }
             return p;
         }
@@ -225,25 +224,38 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         @Override
         protected void onPostExecute(Pair<Integer,String> p) {
             super.onPostExecute(p);
-            threadCount--;
-            if(p.second!=null)
-            {
-                int imageId = p.first;
-                String id = p.second;
-                Log.d("Mytag","Thread count "+threadCount);
-                Log.d("Mytag","ID "+id);
-                if( id != null && !id.equals("unknown")) {
-                    LivePreviewActivity.recognizedIds.add(id);
-                }else{
-                    //what if unknown
-                    TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(imageId));
-                    Log.d(TAG, "onPostExecute: " + TeacherAttendanceActivity.imageViews.size());
+            if(isError) {
+                Toast.makeText(c, "Server Unreachable", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(c, TeacherAttendanceActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Activity activity = (Activity) c;
+                activity.finish();
+                TeacherAttendanceActivity.startRecog = true;
+                c.startActivity(intent);
+
+            }
+            else {
+                threadCount--;
+                if(p.second!=null)
+                {
+                    int imageId = p.first;
+                    String id = p.second;
+                    Log.d("Mytag","Thread count "+threadCount);
+                    Log.d("Mytag","ID "+id);
+                    if( id != null && !id.equals("unknown")) {
+                        LivePreviewActivity.recognizedIds.add(id);
+                    }else{
+                        //what if unknown
+                        TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(imageId));
+                        Log.d(TAG, "onPostExecute: " + TeacherAttendanceActivity.imageViews.size());
+                    }
+                }
+                else
+                {
+                    TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(p.first));
                 }
             }
-            else
-            {
-                TeacherAttendanceActivity.imageViews.add(integerImageViewHashMap.get(p.first));
-            }
+
         }
     }
 }

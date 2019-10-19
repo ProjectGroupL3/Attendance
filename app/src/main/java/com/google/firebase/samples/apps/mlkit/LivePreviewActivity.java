@@ -76,7 +76,8 @@ public final class LivePreviewActivity extends AppCompatActivity
   public static Set<String> recognizedIds;
   private CustomAlertDialog customAlertDialog;
   private SharedPref sharedPref;
-  public static boolean stopRecog = true;
+  private Handler handler;
+  private Runnable runnable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +132,14 @@ public final class LivePreviewActivity extends AppCompatActivity
     return super.onCreateOptionsMenu(menu);
   }
 
+  @Override
+  protected void onStop() {
+    super.onStop();
+    customAlertDialog.dismiss();
+    if(handler != null)
+      handler.removeCallbacks(runnable);
+  }
+
   // handle button activities
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -138,32 +147,33 @@ public final class LivePreviewActivity extends AppCompatActivity
     Log.i("item id",id+"");
     Log.i("item id",R.id.submit_button+"");
     if (id == R.id.submit_button) {
-      stopRecog = false;
+      TeacherAttendanceActivity.startRecog = false;
       customAlertDialog.show();
-      final Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
+      handler = new Handler();
+      runnable =  new Runnable() {
         @Override
         public void run() {
-          if( FaceDetectionProcessor.threadCount > 0 )
-            handler.postDelayed(this, 1000);
-          else
-          {
-            customAlertDialog.dismiss();
-            // do something here
-            Log.d(TAG, "onOptionsItemSelected: " + recognizedIds);
-            Log.d(TAG, "onOptionsItemSelected: " + subjectId);
+            if( FaceDetectionProcessor.threadCount > 0 )
+              handler.postDelayed(this, 1000);
+            else
+            {
+              customAlertDialog.dismiss();
+              // do something here
+              Log.d(TAG, "onOptionsItemSelected: " + recognizedIds);
+              Log.d(TAG, "onOptionsItemSelected: " + subjectId);
 
-            Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
-            intent.putExtra("subjectId",subjectId);
-            String[] objects = new String[recognizedIds.size()];
-            recognizedIds.toArray(objects);
-            final ArrayList<String> list = new ArrayList<>(Arrays.asList(objects));
-            intent.putStringArrayListExtra("recognizedIds",list);
-            startActivity(intent);
-            finish();
+              Intent intent = new Intent(LivePreviewActivity.this,AttendanceActivity.class);
+              intent.putExtra("subjectId",subjectId);
+              String[] objects = new String[recognizedIds.size()];
+              recognizedIds.toArray(objects);
+              final ArrayList<String> list = new ArrayList<>(Arrays.asList(objects));
+              intent.putStringArrayListExtra("recognizedIds",list);
+              startActivity(intent);
+              finish();
+            }
           }
-        }
-      }, 1000);
+      };
+      handler.postDelayed(runnable, 1000);
     }
     return super.onOptionsItemSelected(item);
   }
