@@ -96,7 +96,7 @@ public class AttendanceActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setNestedScrollingEnabled(false);
-        updateAttendanceOfSubject();
+
         getAllStudentsRegisteredToSubject();
         Log.d(TAG, "onCreate: " + subjectId);
 
@@ -106,6 +106,7 @@ public class AttendanceActivity extends AppCompatActivity {
                 alertDialog.show();
                 alertDialog.setTextViewText("Updating");
                 markAttendance();
+                updateAttendanceOfSubject();
             }
         });
 
