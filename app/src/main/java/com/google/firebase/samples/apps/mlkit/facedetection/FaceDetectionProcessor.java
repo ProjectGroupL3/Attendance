@@ -19,8 +19,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
+
+import android.os.AsyncTask;
 import android.util.Log;
-import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,7 +37,12 @@ import com.google.firebase.samples.apps.mlkit.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.LivePreviewActivity;
 import com.google.firebase.samples.apps.mlkit.VisionProcessorBase;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +53,8 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     private Bitmap bitmap;
     private final FirebaseVisionFaceDetector detector;
     private LinearLayout layout;
+    public static int threadCount;
+
     View v;
     Context c;
     Resources res;
@@ -69,7 +77,6 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
 
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options);
     }
-
     public FaceDetectionProcessor(LinearLayout layout, LivePreviewActivity livePreviewActivity) {
         FirebaseVisionFaceDetectorOptions options =
                 new FirebaseVisionFaceDetectorOptions.Builder()
@@ -83,6 +90,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
 //        imageViewArr = new ArrayList<>();
         integerImageViewHashMap = new HashMap<>();
         singleFaceDetectCount = new HashMap<>();
+        threadCount =0;
     }
 
     @Override
@@ -145,13 +153,61 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                         {
                             layout.removeView(integerImageViewHashMap.get(id));
                             layout.addView(integerImageViewHashMap.get(id));
+                            Bitmap bmp=Bitmap.createBitmap(bitmap,x,y,w,h);
+
+                            createThread(bmp);
                         }
                     }
                 }
             }
     }
+
+    private void createThread(Bitmap face) {
+        threadCount++;
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        face.compress(Bitmap.CompressFormat.PNG,100,stream);
+        byte [] bytes=stream.toByteArray();
+
+        UploadImage uploadImage=new UploadImage();
+        uploadImage.execute(bytes);
+    }
+
     @Override
     protected void onFailure(@NonNull Exception e) {
         Log.e(TAG, "Face detection failed " + e);
+    }
+
+    private class UploadImage extends AsyncTask<byte[],Void,String> {
+
+        @Override
+        protected String doInBackground(byte[]... bytes) {
+            String resp =null;
+            try {
+                Socket s ;
+                s = new Socket("192.168.43.114", 7800);
+                ObjectOutputStream oos=new ObjectOutputStream(s.getOutputStream());
+                oos.writeObject(bytes[0]);
+
+                InputStreamReader isr=new InputStreamReader(s.getInputStream());
+                BufferedReader br=new BufferedReader(isr);
+                resp= br.readLine();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return resp;
+        }
+
+        @Override
+        protected void onPostExecute(String id) {
+            super.onPostExecute(id);
+            threadCount--;
+            Log.d("Mytag","Thread count "+threadCount);
+            Log.d("Mytag","ID "+id);
+            if(id!="" && !id.equals("unknown")) {
+                LivePreviewActivity.recognizedIds.add(id);
+            }else{
+                //what if unknown
+            }
+        }
     }
 }

@@ -23,6 +23,7 @@
           android:layout_alignParentStart="true"
           android:layout_alignParentTop="true"
           android:layout_alignParentBottom="true"/>
+
   </com.google.firebase.samples.apps.mlkit.CameraSourcePreview>
 
 
@@ -77,6 +78,12 @@
           android:textOn=""
           android:checked="false"
           />
+
+      <Button
+          android:id="@+id/done_recognition"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Done" />
 
   </FrameLayout>
 
