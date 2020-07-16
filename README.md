@@ -19,3 +19,10 @@
 ### Technology Stack
 - Java (Android)
 - Firebase (firestore database)
+
+### Libraries Used
+- [Face Recognition](https://pypi.org/project/face-recognition/)
+- [Firebase ML Kit](https://firebase.google.com/docs/ml-kit)
+- [Pickle](https://github.com/python/cpython/blob/master/Lib/pickle.py)
+- [CV2](https://pypi.org/project/opencv-python/)
+- [Python Imaging Library (PIL)](https://pypi.org/project/Pillow/)
